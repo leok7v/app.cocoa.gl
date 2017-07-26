@@ -11,12 +11,11 @@
 		B37FFA321F28767A00D351CF /* app.c in Sources */ = {isa = PBXBuildFile; fileRef = B37FFA2C1F28767A00D351CF /* app.c */; };
 		B37FFA331F28767A00D351CF /* cocoa.m in Sources */ = {isa = PBXBuildFile; fileRef = B37FFA2E1F28767A00D351CF /* cocoa.m */; };
 		B37FFA341F28767A00D351CF /* vc3d.c in Sources */ = {isa = PBXBuildFile; fileRef = B37FFA301F28767A00D351CF /* vc3d.c */; };
-		B37FFA351F2876C000D351CF /* app.cocoa.gl.icns in Resources */ = {isa = PBXBuildFile; fileRef = B37FFA281F28766700D351CF /* app.cocoa.gl.icns */; };
+		B39F15151F28792C00EF4186 /* cocoa.gl.icns in Resources */ = {isa = PBXBuildFile; fileRef = B39F15141F28792C00EF4186 /* cocoa.gl.icns */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		B32CC4E21F172ADD00AC9F60 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
-		B37FFA281F28766700D351CF /* app.cocoa.gl.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = app.cocoa.gl.icns; path = src/app.cocoa.gl.icns; sourceTree = "<group>"; };
 		B37FFA291F28766700D351CF /* info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = info.plist; path = src/info.plist; sourceTree = "<group>"; };
 		B37FFA2C1F28767A00D351CF /* app.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = app.c; path = src/app.c; sourceTree = "<group>"; };
 		B37FFA2D1F28767A00D351CF /* app.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = app.h; path = src/app.h; sourceTree = "<group>"; };
@@ -24,6 +23,7 @@
 		B37FFA2F1F28767A00D351CF /* keyboard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = keyboard.h; path = src/keyboard.h; sourceTree = "<group>"; };
 		B37FFA301F28767A00D351CF /* vc3d.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = vc3d.c; path = src/vc3d.c; sourceTree = "<group>"; };
 		B37FFA311F28767A00D351CF /* vc3d.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = vc3d.h; path = src/vc3d.h; sourceTree = "<group>"; };
+		B39F15141F28792C00EF4186 /* cocoa.gl.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = cocoa.gl.icns; path = src/cocoa.gl.icns; sourceTree = "<group>"; };
 		B3DE1EF31F10B1B3000C223D /* app.cocoa.gl.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = app.cocoa.gl.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -42,7 +42,7 @@
 		B32CC4DB1F17291800AC9F60 /* res */ = {
 			isa = PBXGroup;
 			children = (
-				B37FFA281F28766700D351CF /* app.cocoa.gl.icns */,
+				B39F15141F28792C00EF4186 /* cocoa.gl.icns */,
 				B37FFA291F28766700D351CF /* info.plist */,
 			);
 			name = res;
@@ -122,7 +122,7 @@
 					};
 				};
 			};
-			buildConfigurationList = B3DE1EEE1F10B1B3000C223D /* Build configuration list for PBXProject "app.cocoa.gl" */;
+			buildConfigurationList = B3DE1EEE1F10B1B3000C223D /* Build configuration list for PBXProject "cocoa.gl" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -145,7 +145,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B37FFA351F2876C000D351CF /* app.cocoa.gl.icns in Resources */,
+				B39F15151F28792C00EF4186 /* cocoa.gl.icns in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -279,7 +279,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		B3DE1EEE1F10B1B3000C223D /* Build configuration list for PBXProject "app.cocoa.gl" */ = {
+		B3DE1EEE1F10B1B3000C223D /* Build configuration list for PBXProject "cocoa.gl" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				B3DE1F021F10B1B3000C223D /* Debug */,
