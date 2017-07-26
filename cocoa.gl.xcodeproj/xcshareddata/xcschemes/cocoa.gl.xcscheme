@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "B3DE1EF21F10B1B3000C223D"
-               BuildableName = "app.cocoa.gl.app"
-               BlueprintName = "app.cocoa.gl"
-               ReferencedContainer = "container:app.cocoa.gl.xcodeproj">
+               BuildableName = "cocoa.gl.app"
+               BlueprintName = "cocoa.gl"
+               ReferencedContainer = "container:cocoa.gl.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "B3DE1EF21F10B1B3000C223D"
-            BuildableName = "app.cocoa.gl.app"
-            BlueprintName = "app.cocoa.gl"
-            ReferencedContainer = "container:app.cocoa.gl.xcodeproj">
+            BuildableName = "cocoa.gl.app"
+            BlueprintName = "cocoa.gl"
+            ReferencedContainer = "container:cocoa.gl.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -56,9 +56,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "B3DE1EF21F10B1B3000C223D"
-            BuildableName = "app.cocoa.gl.app"
-            BlueprintName = "app.cocoa.gl"
-            ReferencedContainer = "container:app.cocoa.gl.xcodeproj">
+            BuildableName = "cocoa.gl.app"
+            BlueprintName = "cocoa.gl"
+            ReferencedContainer = "container:cocoa.gl.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -75,9 +75,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "B3DE1EF21F10B1B3000C223D"
-            BuildableName = "app.cocoa.gl.app"
-            BlueprintName = "app.cocoa.gl"
-            ReferencedContainer = "container:app.cocoa.gl.xcodeproj">
+            BuildableName = "cocoa.gl.app"
+            BlueprintName = "cocoa.gl"
+            ReferencedContainer = "container:cocoa.gl.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
