@@ -7,25 +7,24 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		B32CC4E01F1729AE00AC9F60 /* vc3d.c in Sources */ = {isa = PBXBuildFile; fileRef = B32CC4DE1F1729AE00AC9F60 /* vc3d.c */; };
 		B32CC4E31F172ADD00AC9F60 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B32CC4E21F172ADD00AC9F60 /* OpenGL.framework */; };
-		B3E424981F11C8E1007819EC /* app.c in Sources */ = {isa = PBXBuildFile; fileRef = B3D988911F11C78800A616F1 /* app.c */; };
-		B3E424991F11C8E5007819EC /* cocoa.m in Sources */ = {isa = PBXBuildFile; fileRef = B3D988941F11C78800A616F1 /* cocoa.m */; };
-		B3E4249A1F11C8EF007819EC /* app.icns in Resources */ = {isa = PBXBuildFile; fileRef = B3D988931F11C78800A616F1 /* app.icns */; };
-		B3E4249B1F11C8F3007819EC /* info.plist in Resources */ = {isa = PBXBuildFile; fileRef = B3D988951F11C78800A616F1 /* info.plist */; };
+		B37FFA321F28767A00D351CF /* app.c in Sources */ = {isa = PBXBuildFile; fileRef = B37FFA2C1F28767A00D351CF /* app.c */; };
+		B37FFA331F28767A00D351CF /* cocoa.m in Sources */ = {isa = PBXBuildFile; fileRef = B37FFA2E1F28767A00D351CF /* cocoa.m */; };
+		B37FFA341F28767A00D351CF /* vc3d.c in Sources */ = {isa = PBXBuildFile; fileRef = B37FFA301F28767A00D351CF /* vc3d.c */; };
+		B37FFA351F2876C000D351CF /* app.cocoa.gl.icns in Resources */ = {isa = PBXBuildFile; fileRef = B37FFA281F28766700D351CF /* app.cocoa.gl.icns */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		B32CC4DE1F1729AE00AC9F60 /* vc3d.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = vc3d.c; path = ../src/vc3d.c; sourceTree = "<group>"; };
-		B32CC4DF1F1729AE00AC9F60 /* vc3d.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = vc3d.h; path = ../src/vc3d.h; sourceTree = "<group>"; };
 		B32CC4E21F172ADD00AC9F60 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
-		B3C7A1CC1F12BD3D00A21276 /* keyboard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = keyboard.h; path = ../src/keyboard.h; sourceTree = "<group>"; };
-		B3D988911F11C78800A616F1 /* app.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = app.c; path = ../src/app.c; sourceTree = SOURCE_ROOT; };
-		B3D988921F11C78800A616F1 /* app.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = app.h; path = ../src/app.h; sourceTree = SOURCE_ROOT; };
-		B3D988931F11C78800A616F1 /* app.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = app.icns; path = ../src/app.icns; sourceTree = SOURCE_ROOT; };
-		B3D988941F11C78800A616F1 /* cocoa.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = cocoa.m; path = ../src/cocoa.m; sourceTree = SOURCE_ROOT; };
-		B3D988951F11C78800A616F1 /* info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = info.plist; path = ../src/info.plist; sourceTree = SOURCE_ROOT; };
-		B3DE1EF31F10B1B3000C223D /* app.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = app.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		B37FFA281F28766700D351CF /* app.cocoa.gl.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = app.cocoa.gl.icns; path = src/app.cocoa.gl.icns; sourceTree = "<group>"; };
+		B37FFA291F28766700D351CF /* info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = info.plist; path = src/info.plist; sourceTree = "<group>"; };
+		B37FFA2C1F28767A00D351CF /* app.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = app.c; path = src/app.c; sourceTree = "<group>"; };
+		B37FFA2D1F28767A00D351CF /* app.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = app.h; path = src/app.h; sourceTree = "<group>"; };
+		B37FFA2E1F28767A00D351CF /* cocoa.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = cocoa.m; path = src/cocoa.m; sourceTree = "<group>"; };
+		B37FFA2F1F28767A00D351CF /* keyboard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = keyboard.h; path = src/keyboard.h; sourceTree = "<group>"; };
+		B37FFA301F28767A00D351CF /* vc3d.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = vc3d.c; path = src/vc3d.c; sourceTree = "<group>"; };
+		B37FFA311F28767A00D351CF /* vc3d.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = vc3d.h; path = src/vc3d.h; sourceTree = "<group>"; };
+		B3DE1EF31F10B1B3000C223D /* app.cocoa.gl.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = app.cocoa.gl.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -43,8 +42,8 @@
 		B32CC4DB1F17291800AC9F60 /* res */ = {
 			isa = PBXGroup;
 			children = (
-				B3D988951F11C78800A616F1 /* info.plist */,
-				B3D988931F11C78800A616F1 /* app.icns */,
+				B37FFA281F28766700D351CF /* app.cocoa.gl.icns */,
+				B37FFA291F28766700D351CF /* info.plist */,
 			);
 			name = res;
 			sourceTree = "<group>";
@@ -60,12 +59,12 @@
 		B3D988901F11C77200A616F1 /* src */ = {
 			isa = PBXGroup;
 			children = (
-				B32CC4DE1F1729AE00AC9F60 /* vc3d.c */,
-				B32CC4DF1F1729AE00AC9F60 /* vc3d.h */,
-				B3C7A1CC1F12BD3D00A21276 /* keyboard.h */,
-				B3D988911F11C78800A616F1 /* app.c */,
-				B3D988921F11C78800A616F1 /* app.h */,
-				B3D988941F11C78800A616F1 /* cocoa.m */,
+				B37FFA2C1F28767A00D351CF /* app.c */,
+				B37FFA2D1F28767A00D351CF /* app.h */,
+				B37FFA2E1F28767A00D351CF /* cocoa.m */,
+				B37FFA2F1F28767A00D351CF /* keyboard.h */,
+				B37FFA301F28767A00D351CF /* vc3d.c */,
+				B37FFA311F28767A00D351CF /* vc3d.h */,
 			);
 			name = src;
 			sourceTree = "<group>";
@@ -83,7 +82,7 @@
 		B3DE1EF41F10B1B3000C223D /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				B3DE1EF31F10B1B3000C223D /* app.app */,
+				B3DE1EF31F10B1B3000C223D /* app.cocoa.gl.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -91,9 +90,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		B3DE1EF21F10B1B3000C223D /* app */ = {
+		B3DE1EF21F10B1B3000C223D /* app.cocoa.gl */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = B3DE1F041F10B1B3000C223D /* Build configuration list for PBXNativeTarget "app" */;
+			buildConfigurationList = B3DE1F041F10B1B3000C223D /* Build configuration list for PBXNativeTarget "app.cocoa.gl" */;
 			buildPhases = (
 				B3DE1EEF1F10B1B3000C223D /* Sources */,
 				B3DE1EF01F10B1B3000C223D /* Frameworks */,
@@ -103,9 +102,9 @@
 			);
 			dependencies = (
 			);
-			name = app;
+			name = app.cocoa.gl;
 			productName = test3;
-			productReference = B3DE1EF31F10B1B3000C223D /* app.app */;
+			productReference = B3DE1EF31F10B1B3000C223D /* app.cocoa.gl.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -123,7 +122,7 @@
 					};
 				};
 			};
-			buildConfigurationList = B3DE1EEE1F10B1B3000C223D /* Build configuration list for PBXProject "app" */;
+			buildConfigurationList = B3DE1EEE1F10B1B3000C223D /* Build configuration list for PBXProject "app.cocoa.gl" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -136,7 +135,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				B3DE1EF21F10B1B3000C223D /* app */,
+				B3DE1EF21F10B1B3000C223D /* app.cocoa.gl */,
 			);
 		};
 /* End PBXProject section */
@@ -146,8 +145,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B3E4249B1F11C8F3007819EC /* info.plist in Resources */,
-				B3E4249A1F11C8EF007819EC /* app.icns in Resources */,
+				B37FFA351F2876C000D351CF /* app.cocoa.gl.icns in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -158,9 +156,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B3E424991F11C8E5007819EC /* cocoa.m in Sources */,
-				B32CC4E01F1729AE00AC9F60 /* vc3d.c in Sources */,
-				B3E424981F11C8E1007819EC /* app.c in Sources */,
+				B37FFA341F28767A00D351CF /* vc3d.c in Sources */,
+				B37FFA331F28767A00D351CF /* cocoa.m in Sources */,
+				B37FFA321F28767A00D351CF /* app.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -258,7 +256,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
-				INFOPLIST_FILE = "$(SRCROOT)/../src/info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/src/info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				PRODUCT_BUNDLE_IDENTIFIER = us.cod;
@@ -270,7 +268,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
-				INFOPLIST_FILE = "$(SRCROOT)/../src/info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/src/info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				PRODUCT_BUNDLE_IDENTIFIER = us.cod;
@@ -281,7 +279,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		B3DE1EEE1F10B1B3000C223D /* Build configuration list for PBXProject "app" */ = {
+		B3DE1EEE1F10B1B3000C223D /* Build configuration list for PBXProject "app.cocoa.gl" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				B3DE1F021F10B1B3000C223D /* Debug */,
@@ -290,7 +288,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		B3DE1F041F10B1B3000C223D /* Build configuration list for PBXNativeTarget "app" */ = {
+		B3DE1F041F10B1B3000C223D /* Build configuration list for PBXNativeTarget "app.cocoa.gl" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				B3DE1F051F10B1B3000C223D /* Debug */,

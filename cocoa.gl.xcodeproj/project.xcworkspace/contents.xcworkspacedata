@@ -2,6 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "self:/Users/leo/cocoa/app/xcode/app.xcodeproj">
+      location = "self:/Users/leo/tmp/app.cocoa.gl/app.cocoa.gl.xcodeproj">
    </FileRef>
 </Workspace>
