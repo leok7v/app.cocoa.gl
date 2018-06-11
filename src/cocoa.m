@@ -71,12 +71,14 @@ static void toggle_fullscreen(NSWindow* window) {
         dispatch_async(dispatch_get_main_queue(), ^{
             bool full_screen = (app->window_state & WINDOW_STATE_FULLSCREEN) != 0;
             window.hidesOnDeactivate = full_screen;
+            [window toggleFullScreen: null]; // must be on the next dispatch otherwise update_state will be called from inside itself
             if (full_screen) {
                 NSApplication.sharedApplication.presentationOptions |= NSApplicationPresentationAutoHideMenuBar;
-            } else {
-                NSApplication.sharedApplication.presentationOptions &= ~NSApplicationPresentationAutoHideMenuBar;
             }
-            [window toggleFullScreen: null]; // must be on the next dispatch otherwise update_state will be called from inside itself
+            if (!full_screen) {
+                const NSApplicationPresentationOptions clear = NSApplicationPresentationAutoHideMenuBar | NSApplicationPresentationHideMenuBar | NSApplicationPresentationFullScreen;
+                NSApplication.sharedApplication.presentationOptions &= ~(clear);
+            }
         });
     }
 }
