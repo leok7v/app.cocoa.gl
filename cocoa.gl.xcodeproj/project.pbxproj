@@ -8,17 +8,24 @@
 
 /* Begin PBXBuildFile section */
 		B300E10A20D140BD00444AAB /* math4x4.c in Sources */ = {isa = PBXBuildFile; fileRef = B300E10920D140BC00444AAB /* math4x4.c */; };
+		B300E11020D1498900444AAB /* intersect_triangle.c in Sources */ = {isa = PBXBuildFile; fileRef = B300E10F20D1498900444AAB /* intersect_triangle.c */; };
 		B32CC4E31F172ADD00AC9F60 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B32CC4E21F172ADD00AC9F60 /* OpenGL.framework */; };
 		B37FFA321F28767A00D351CF /* app.c in Sources */ = {isa = PBXBuildFile; fileRef = B37FFA2C1F28767A00D351CF /* app.c */; };
 		B37FFA331F28767A00D351CF /* cocoa.m in Sources */ = {isa = PBXBuildFile; fileRef = B37FFA2E1F28767A00D351CF /* cocoa.m */; };
 		B37FFA341F28767A00D351CF /* vc3d.c in Sources */ = {isa = PBXBuildFile; fileRef = B37FFA301F28767A00D351CF /* vc3d.c */; };
 		B39F15151F28792C00EF4186 /* cocoa.gl.icns in Resources */ = {isa = PBXBuildFile; fileRef = B39F15141F28792C00EF4186 /* cocoa.gl.icns */; };
+		B3B0978020D15B4D008DF8E5 /* tritri_isectline.c in Sources */ = {isa = PBXBuildFile; fileRef = B3B0977C20D15B4D008DF8E5 /* tritri_isectline.c */; };
+		B3B0978120D15B4D008DF8E5 /* tribox3.c in Sources */ = {isa = PBXBuildFile; fileRef = B3B0977D20D15B4D008DF8E5 /* tribox3.c */; };
+		B3B0978220D15B4D008DF8E5 /* opttritri.c in Sources */ = {isa = PBXBuildFile; fileRef = B3B0977E20D15B4D008DF8E5 /* opttritri.c */; };
+		B3B0978320D15B4D008DF8E5 /* fromtorot.c in Sources */ = {isa = PBXBuildFile; fileRef = B3B0977F20D15B4D008DF8E5 /* fromtorot.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		B300E10920D140BC00444AAB /* math4x4.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = math4x4.c; path = src/math4x4.c; sourceTree = "<group>"; };
 		B300E10B20D140C800444AAB /* math4x4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = math4x4.h; path = src/math4x4.h; sourceTree = "<group>"; };
 		B300E10C20D1420300444AAB /* posix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = posix.h; path = src/posix.h; sourceTree = "<group>"; };
+		B300E10E20D1498900444AAB /* intersect_triangle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = intersect_triangle.h; path = ext/intersect_triangle.h; sourceTree = SOURCE_ROOT; };
+		B300E10F20D1498900444AAB /* intersect_triangle.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = intersect_triangle.c; path = ext/intersect_triangle.c; sourceTree = SOURCE_ROOT; };
 		B32CC4E21F172ADD00AC9F60 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		B37FFA291F28766700D351CF /* info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = info.plist; path = src/info.plist; sourceTree = "<group>"; };
 		B37FFA2C1F28767A00D351CF /* app.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = app.c; path = src/app.c; sourceTree = "<group>"; };
@@ -28,6 +35,10 @@
 		B37FFA301F28767A00D351CF /* vc3d.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = vc3d.c; path = src/vc3d.c; sourceTree = "<group>"; };
 		B37FFA311F28767A00D351CF /* vc3d.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = vc3d.h; path = src/vc3d.h; sourceTree = "<group>"; };
 		B39F15141F28792C00EF4186 /* cocoa.gl.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = cocoa.gl.icns; path = src/cocoa.gl.icns; sourceTree = "<group>"; };
+		B3B0977C20D15B4D008DF8E5 /* tritri_isectline.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = tritri_isectline.c; path = ext/intersections/tritri_isectline.c; sourceTree = SOURCE_ROOT; };
+		B3B0977D20D15B4D008DF8E5 /* tribox3.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = tribox3.c; path = ext/intersections/tribox3.c; sourceTree = SOURCE_ROOT; };
+		B3B0977E20D15B4D008DF8E5 /* opttritri.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = opttritri.c; path = ext/intersections/opttritri.c; sourceTree = SOURCE_ROOT; };
+		B3B0977F20D15B4D008DF8E5 /* fromtorot.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = fromtorot.c; path = ext/intersections/fromtorot.c; sourceTree = SOURCE_ROOT; };
 		B3DE1EF31F10B1B3000C223D /* app.cocoa.gl.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = app.cocoa.gl.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -43,6 +54,20 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		B300E10D20D1497100444AAB /* ext */ = {
+			isa = PBXGroup;
+			children = (
+				B3B0977F20D15B4D008DF8E5 /* fromtorot.c */,
+				B3B0977E20D15B4D008DF8E5 /* opttritri.c */,
+				B3B0977D20D15B4D008DF8E5 /* tribox3.c */,
+				B3B0977C20D15B4D008DF8E5 /* tritri_isectline.c */,
+				B300E10F20D1498900444AAB /* intersect_triangle.c */,
+				B300E10E20D1498900444AAB /* intersect_triangle.h */,
+			);
+			name = ext;
+			path = "New Group";
+			sourceTree = "<group>";
+		};
 		B32CC4DB1F17291800AC9F60 /* res */ = {
 			isa = PBXGroup;
 			children = (
@@ -79,6 +104,7 @@
 		B3DE1EEA1F10B1B3000C223D = {
 			isa = PBXGroup;
 			children = (
+				B300E10D20D1497100444AAB /* ext */,
 				B32CC4DB1F17291800AC9F60 /* res */,
 				B3D988901F11C77200A616F1 /* src */,
 				B3DE1EF41F10B1B3000C223D /* Products */,
@@ -166,6 +192,11 @@
 				B300E10A20D140BD00444AAB /* math4x4.c in Sources */,
 				B37FFA341F28767A00D351CF /* vc3d.c in Sources */,
 				B37FFA331F28767A00D351CF /* cocoa.m in Sources */,
+				B3B0978120D15B4D008DF8E5 /* tribox3.c in Sources */,
+				B3B0978320D15B4D008DF8E5 /* fromtorot.c in Sources */,
+				B300E11020D1498900444AAB /* intersect_triangle.c in Sources */,
+				B3B0978220D15B4D008DF8E5 /* opttritri.c in Sources */,
+				B3B0978020D15B4D008DF8E5 /* tritri_isectline.c in Sources */,
 				B37FFA321F28767A00D351CF /* app.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
