@@ -8,7 +8,7 @@ static app_t app;
 static vc3d_t vc;
 
 static void shape(int x, int y, int w, int h) {
-    printf("shape(%d,%d %dx%d)\n", x, y, w, h);
+//  printf("shape(%d,%d %dx%d)\n", x, y, w, h);
     vc3d_shape(vc, x, y, w, h);
 }
 
@@ -84,8 +84,9 @@ app_t* run(int argc, const char* argv[]) {
     app.timer = timer;
     app.prefs = prefs;
     app.quits = quits;
-    app.window_min_w = 640;
-    app.window_min_h = 480;
+//  app.window_state = WINDOW_STATE_FULLSCREEN;
+    app.window_min_w = 800;
+    app.window_min_h = 600;
     app.timer_frequency = 60;
     vc = vc3d_create(&app);
     return &app;

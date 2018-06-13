@@ -13,7 +13,6 @@
 #include <unistd.h>
 #include <sys/mman.h>
 
-
 #include "app.h"
 
 #undef min
@@ -51,6 +50,7 @@ static app_t* app;
 static app_back_t back;
 
 @interface Window : NSWindow {
+@public
     dispatch_source_t timer;
     NSOpenGLPixelFormat* pixel_format;
     NSOpenGLContext* context;
@@ -114,6 +114,9 @@ static Window* create_window() {
     if (app->window_max_w > 0 && app->window_max_h > 0) {
         window.contentMaxSize = NSMakeSize(app->window_max_w, app->window_max_h);
     }
+    // not sure next two lines are absolutely necessary but leave it as insurance against future Apple changes:
+    window.contentView.translatesAutoresizingMaskIntoConstraints = false;
+    window.contentView.autoresizingMask = NSViewWidthSizable|NSViewHeightSizable;
     app->window = (__bridge void *)(window);
     NSRect frame = window.frame;
     app->window_x = frame.origin.x;
@@ -134,8 +137,9 @@ static void update_state(NSWindow* window) {
         hide_application(window, (app->window_state & WINDOW_STATE_HIDDEN) != 0);
     }
     back.window_state = app->window_state;
-    if (app->window_x != back.window_x || app->window_y != back.window_y || app->window_w != back.window_w || app->window_h != back.window_h) { // display: true crashes when window is going up the screen boundaries
-        [window setFrame: NSMakeRect(app->window_x, app->window_y, app->window_w, app->window_h) display: false animate: true];
+    if (app->window_x != back.window_x || app->window_y != back.window_y || app->window_w != back.window_w || app->window_h != back.window_h) {
+        window.contentSize = NSMakeSize(app->window_w, app->window_h);
+        [window setFrame: NSMakeRect(app->window_x, app->window_y, app->window_w, app->window_h) display: true animate: true];
         back.window_x = app->window_x;
         back.window_y = app->window_y;
         back.window_w = app->window_w;
@@ -146,6 +150,24 @@ static void update_state(NSWindow* window) {
         back.timer_frequency = app->timer_frequency;
     }
     app->time = nanotime() / 1000000.0;
+}
+
+static void redraw(int x, int y, int w, int h) {
+    if (app->window != null) {
+        NSWindow* w = (__bridge NSWindow*)app->window;
+        w.contentView.needsDisplay = true;
+        w.viewsNeedDisplay = true;
+    }
+}
+
+static void reshape(NSWindow* window) {
+    NSRect frame = window.frame;
+    // shape() still has previous window position and size in `app` when called
+    app->shape(frame.origin.x, frame.origin.y, frame.size.width, frame.size.height);
+    back.window_x = app->window_x = frame.origin.x;
+    back.window_y = app->window_y = frame.origin.y;
+    back.window_w = app->window_w = frame.size.width;
+    back.window_h = app->window_h = frame.size.height;
 }
 
 static int translate_type_to_button_number(int buttonNumber) {
@@ -217,7 +239,7 @@ static void mouse_input(NSEvent* e, int kind) {
             NSOpenGLPFADepthSize, 24,
             // Must specify the 3.2 Core Profile to use OpenGL 3.2
             NSOpenGLPFAOpenGLProfile,
-            NSOpenGLProfileVersion3_2Core,
+            NSOpenGLProfileVersion4_1Core, // NSOpenGLProfileVersion3_2Core,
             0
         };
         pixel_format  = [NSOpenGLPixelFormat.alloc initWithAttributes: attrs];
@@ -261,10 +283,12 @@ static void mouse_input(NSEvent* e, int kind) {
     }
 }
 
-- (void) displayIfNeeded { update_state(self);
-    (void)context.makeCurrentContext;
+- (void) displayIfNeeded {
+    update_state(self);
+    [context makeCurrentContext];
     app->paint(0, 0, app->window_w, app->window_h);
-    (void)context.flushBuffer;
+    [context flushBuffer];
+    [NSOpenGLContext clearCurrentContext];
 }
 
 @end
@@ -295,17 +319,16 @@ static void mouse_input(NSEvent* e, int kind) {
 
 - (void) hide: (nullable id)sender { hide_application(window, true); }
 
-static void reshape(NSWindow* window) {
-    NSRect frame = window.frame;
-    app->shape(frame.origin.x, frame.origin.y, frame.size.width, frame.size.height);
-    back.window_x = app->window_x = frame.origin.x;
-    back.window_y = app->window_y = frame.origin.y;
-    back.window_w = app->window_w = frame.size.width;
-    back.window_h = app->window_h = frame.size.height;
-}
+// On OSX windowDidMove, windowDidResize cannot call reshape(); here because there is no glContext
 
 - (void)windowDidMove: (NSNotification*) n { reshape(window); }
-- (void)windowDidResize: (NSNotification*) n { reshape(window); }
+
+- (void)windowDidResize: (NSNotification*) n {
+    [window->context makeCurrentContext]; // in case reshape() needs to do OpenGL calls
+    [window->context update]; // this is very important - resize does not work without it!
+    reshape(window);
+    [NSOpenGLContext clearCurrentContext];
+}
 
 - (void) applicationDidHide: (NSNotification*) n {
     app->window_state |= WINDOW_STATE_HIDDEN;
@@ -333,13 +356,6 @@ static void reshape(NSWindow* window) {
 - (void) flagsChanged: (NSEvent*) e { keyboad_input(window, e, 0); [self flagsChanged: e]; }
 
 @end
-
-static void redraw(int x, int y, int w, int h) {
-    if (app->window != null) {
-        NSWindow* w = (__bridge NSWindow*)app->window;
-        w.viewsNeedDisplay = true;
-    }
-}
 
 static void later(void* that, void* message, void (*callback)(void* _that, void* _message)) {
     dispatch_async(dispatch_get_main_queue(), ^{

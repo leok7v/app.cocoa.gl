@@ -80,7 +80,7 @@ typedef struct app_s {
     void* gl_context;
     double time;   /* time in milliseconds since application started */
     void* window;
-    void (*shape)(int x, int y, int width, int height);
+    void (*shape)(int x, int y, int width, int height); /* on OSX OpenGL does not have context here */
     void (*paint)(int x, int y, int w, int h);
     void (*input)(input_event_t* e);
     void (*timer)();
