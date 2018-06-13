@@ -1,56 +1,31 @@
 #include "app.h"
 #include "vc3d.h"
+#include "math4x4.h"
 #include <OpenGL/gl.h>
 #include <OpenGL/gl3.h>
-#include <math.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <memory.h>
 
 BEGIN_C
-
-#define IDENTITY_MATRIX_4x4_FLOAT { \
-    1, 0, 0, 0, \
-    0, 1, 0, 0, \
-    0, 0, 1, 0, \
-    0, 0, 0, 1  }
-
-static const float identity_4x4_f[16] = IDENTITY_MATRIX_4x4_FLOAT;
-
-static void multiply_4x4_f(float* r, const float* a, const float* b) {
-    for (int i = 0; i <= 12; i += 4) {
-        for (int j = 0; j < 4; j++) {
-            r[i + j] = b[i] * a[j] + b[i + 1] * a[j + 4] + b[i + 2] * a[j + 8] + b[i + 3] * a[j + 12];
-        }
-    }
-}
 
 typedef struct vc3d_s {
     app_t* app;
     GLuint program_id;
     int w;
     int h;
-    float model[16];
-    float view[16];
-    float projection[16];
+    mat4x4f_t model;
+    mat4x4f_t view;
+    mat4x4f_t projection;
 } vc3d_t_;
 
 vc3d_t vc3d_create(app_t* app) {
     vc3d_t_* vc = (vc3d_t_*)calloc(sizeof(vc3d_t_), 1); // zeroed out
     if (vc != null) {
         vc->app = app;
-        memcpy(vc->model, identity_4x4_f, sizeof(vc->model));
-        memcpy(vc->view, identity_4x4_f, sizeof(vc->view));
-        memcpy(vc->projection, identity_4x4_f, sizeof(vc->projection));
+        memcpy(vc->model, identity_4x4f, sizeof(vc->model));
+        memcpy(vc->view, identity_4x4f, sizeof(vc->view));
+        memcpy(vc->projection, identity_4x4f, sizeof(vc->projection));
     }
     return vc;
 }
-
-#define IDENTITY_MATRIX_4x4_FLOAT { \
-    1, 0, 0, 0, \
-    0, 1, 0, 0, \
-    0, 0, 1, 0, \
-    0, 0, 0, 1  }
 
 static void orthographic_projection(GLfloat* m, float left, float right, float bottom, float top, float near, float far) {
     // see: http://en.wikipedia.org/wiki/Orthographic_projection_(geometry)
@@ -64,7 +39,7 @@ static void orthographic_projection(GLfloat* m, float left, float right, float b
 }
 
 static void viewport(GLfloat* m, float w, float h, float near, float far) {
-    memcpy(m, identity_4x4_f, sizeof(identity_4x4_f));
+    memcpy(m, identity_4x4f, sizeof(identity_4x4f));
 /*
     m[0] = w / 2;
     m[5] = h / 2;
@@ -211,11 +186,11 @@ void vc3d_paint(vc3d_t p, int x, int y, int w, int h) {
     }
     check_gl(glUseProgram(vc->program_id))
     // create transformations
-    float mv[16];  // model * view
-    float mvp[16] = IDENTITY_MATRIX_4x4_FLOAT; // model * view * projection
-    multiply_4x4_f(mv, vc->model, vc->view);
-    multiply_4x4_f(mvp, mv, vc->projection);
-    memcpy(mvp, identity_4x4_f, sizeof(mvp)); // DEBUG
+    mat4x4f_t mv;  // model * view
+    multiply_4x4f(mv, vc->model, vc->view);
+    mat4x4f_t mvp = IDENTITY_MATRIX_4x4F; // model * view * projection
+    multiply_4x4f(mvp, mv, vc->projection);
+    memcpy(mvp, identity_4x4f, sizeof(mvp)); // DEBUG
 /*
     projection = perspective(glm::radians(45.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
     view       = translate(view, glm::vec3(0.0f, 0.0f, -3.0f));

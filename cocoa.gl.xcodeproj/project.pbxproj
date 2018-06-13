@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B300E10A20D140BD00444AAB /* math4x4.c in Sources */ = {isa = PBXBuildFile; fileRef = B300E10920D140BC00444AAB /* math4x4.c */; };
 		B32CC4E31F172ADD00AC9F60 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B32CC4E21F172ADD00AC9F60 /* OpenGL.framework */; };
 		B37FFA321F28767A00D351CF /* app.c in Sources */ = {isa = PBXBuildFile; fileRef = B37FFA2C1F28767A00D351CF /* app.c */; };
 		B37FFA331F28767A00D351CF /* cocoa.m in Sources */ = {isa = PBXBuildFile; fileRef = B37FFA2E1F28767A00D351CF /* cocoa.m */; };
@@ -15,6 +16,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		B300E10920D140BC00444AAB /* math4x4.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = math4x4.c; path = src/math4x4.c; sourceTree = "<group>"; };
+		B300E10B20D140C800444AAB /* math4x4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = math4x4.h; path = src/math4x4.h; sourceTree = "<group>"; };
+		B300E10C20D1420300444AAB /* posix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = posix.h; path = src/posix.h; sourceTree = "<group>"; };
 		B32CC4E21F172ADD00AC9F60 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		B37FFA291F28766700D351CF /* info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = info.plist; path = src/info.plist; sourceTree = "<group>"; };
 		B37FFA2C1F28767A00D351CF /* app.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = app.c; path = src/app.c; sourceTree = "<group>"; };
@@ -59,6 +63,9 @@
 		B3D988901F11C77200A616F1 /* src */ = {
 			isa = PBXGroup;
 			children = (
+				B300E10C20D1420300444AAB /* posix.h */,
+				B300E10B20D140C800444AAB /* math4x4.h */,
+				B300E10920D140BC00444AAB /* math4x4.c */,
 				B37FFA2C1F28767A00D351CF /* app.c */,
 				B37FFA2D1F28767A00D351CF /* app.h */,
 				B37FFA2E1F28767A00D351CF /* cocoa.m */,
@@ -156,6 +163,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B300E10A20D140BD00444AAB /* math4x4.c in Sources */,
 				B37FFA341F28767A00D351CF /* vc3d.c in Sources */,
 				B37FFA331F28767A00D351CF /* cocoa.m in Sources */,
 				B37FFA321F28767A00D351CF /* app.c in Sources */,
