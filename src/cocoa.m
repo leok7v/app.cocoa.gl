@@ -326,7 +326,7 @@ static void mouse_input(NSEvent* e, int kind) {
 - (void)windowDidResize: (NSNotification*) n {
     [window->context makeCurrentContext]; // in case reshape() needs to do OpenGL calls
     [window->context update]; // this is very important - resize does not work without it!
-    reshape(window);
+    reshape(window); // see: https://lists.apple.com/archives/cocoa-dev/2006/Oct/msg01512.html
     [NSOpenGLContext clearCurrentContext];
 }
 
