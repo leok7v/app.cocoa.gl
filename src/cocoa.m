@@ -15,11 +15,6 @@
 
 #include "app.h"
 
-#undef min
-#undef max
-#define min(a,b) ((a) < (b) ? (a) : (b))
-#define max(a,b) ((a) > (b) ? (a) : (b))
-
 // static uint64_t gettid() { uint64_t tid; pthread_threadid_np(null, &tid); return tid; }
 
 static double seconds_since_boot() {
@@ -100,8 +95,8 @@ static void hide_application(NSWindow* window, bool hide) {
 
 static Window* create_window() {
     bool full_screen = (app->window_state & WINDOW_STATE_FULLSCREEN) != 0;
-    int w = max(app->window_w, app->window_min_w);
-    int h = max(app->window_h, app->window_min_h);
+    int w = maximum(app->window_w, app->window_min_w);
+    int h = maximum(app->window_h, app->window_min_h);
     NSRect r = full_screen ? NSScreen.mainScreen.frame : NSMakeRect(0, 0, w > 0 ? w : 640, h > 0 ? h : 480);
     NSWindowStyleMask sm = NSWindowStyleMaskBorderless|NSWindowStyleMaskClosable|NSWindowStyleMaskMiniaturizable|NSWindowStyleMaskResizable|NSFullSizeContentViewWindowMask|NSTitledWindowMask;
     Window* window = [Window.alloc initWithContentRect: r styleMask: sm backing: NSBackingStoreBuffered defer: full_screen];
@@ -243,7 +238,7 @@ static void mouse_input(NSEvent* e, int kind) {
     NSRect rc = [self convertRectToBacking: [self bounds]];
 //  printf("drawRect\n");
     (void)self.openGLContext.makeCurrentContext;
-//  update_state(self);
+    update_state(self.window);
     //  CGLLockContext(context.CGLContextObj);
     app->paint(0, 0, app->window_w, app->window_h);
     (void)self.openGLContext.flushBuffer;
@@ -252,14 +247,15 @@ static void mouse_input(NSEvent* e, int kind) {
 }
 
 - (void)reshape {
-    (void)self.openGLContext.update;
+    [super reshape];
+   [self.openGLContext update];
 //  updateAndDraw();
 }
 
 - (BOOL) acceptsFirstResponder { return true; }
 - (BOOL) becomeFirstResponder { return true; }
 - (BOOL) resignFirstResponder { return true; }
-- (BOOL)isFlipped  { return true; }
+- (BOOL) isFlipped  { return true; }
 
 @end
 
@@ -462,8 +458,7 @@ int main(int argc, const char* argv[]) {
     menu_add_item(i.submenu, quit, @selector(stop:), @"q");
     a.mainMenu = NSMenu.new;
     [a.mainMenu addItem: i];
-    AppDelegate* d = AppDelegate.new;
-    a.delegate = d;
+    a.delegate = AppDelegate.new;
     (void)a.run;
     int exit_status = app->exits != null ? app->exits() : 0;
     return exit_status;

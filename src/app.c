@@ -13,7 +13,7 @@ static void shape(int x, int y, int w, int h) {
 }
 
 static void paint(int x, int y, int w, int h) {
-//  printf("paint(%d,%d %dx%d)\n", x, y, w, h);
+//  printf("[%06d] paint(%d,%d %dx%d)\n", gettid(), x, y, w, h);
     vc3d_paint(vc, x, y, w, h);
 }
 
@@ -63,8 +63,8 @@ static void input(input_event_t* e) {
 }
 
 static void timer() {
-//  printf("timer %.6f\n", app.time);
-    app.redraw(0, 0, app.window_w, app.window_h);
+//  printf("[%06d] timer %.6f\n", gettid(), app.time);
+//  app.redraw(0, 0, app.window_w, app.window_h);
 }
 
 static void prefs() {
@@ -87,7 +87,7 @@ app_t* run(int argc, const char* argv[]) {
 //  app.window_state = WINDOW_STATE_FULLSCREEN;
     app.window_min_w = 800;
     app.window_min_h = 600;
-    app.timer_frequency = 60;
+    app.timer_frequency = 60; // Hz
     vc = vc3d_create(&app);
     return &app;
 }
