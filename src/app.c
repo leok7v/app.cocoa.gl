@@ -25,7 +25,7 @@ static void input(input_event_t* e) {
         } else {
             printf("ch=%d 0x%04X key=%d 0x%02X ", e->ch, e->ch, e->key, e->key);
         }
-        if (e->ch == 'f' || e->ch == 'F') {
+        if (e->ch == 'f' || e->ch == 'F' || e->key == KEY_ESCAPE) {
             app.window_state ^= WINDOW_STATE_FULLSCREEN;
         }
         if (e->ch == 'q' || e->ch == 'Q') {
@@ -63,7 +63,7 @@ static void input(input_event_t* e) {
 }
 
 static void timer() {
-//  printf("timer %.1f\n", app.time);
+//  printf("timer %.6f\n", app.time);
     app.redraw(0, 0, app.window_w, app.window_h);
 }
 

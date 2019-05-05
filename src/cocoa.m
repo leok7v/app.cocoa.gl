@@ -22,16 +22,21 @@
 
 // static uint64_t gettid() { uint64_t tid; pthread_threadid_np(null, &tid); return tid; }
 
-static int64_t nanotime() {
-    static int64_t time0;
+static double seconds_since_boot() {
     static mach_timebase_info_data_t tb;
-    uint64_t t = mach_absolute_time();
+    double t = (double)mach_absolute_time() / NSEC_PER_SEC;
     if (tb.denom == 0) {
         mach_timebase_info(&tb);
     }
     t = t * tb.numer / tb.denom;
-    if (time0 == 0) { time0 = t; }
-    return t - time0;
+    return t;
+}
+
+static double seconds_since_start() {
+    static double start_time;
+    double t = seconds_since_boot();
+    if (start_time == 0) { start_time = t; }
+    return t - start_time;
 }
 
 typedef struct app_back_s {
@@ -149,7 +154,7 @@ static void update_state(NSWindow* window) {
         [(Window*)window setTimer: app->timer_frequency];
         back.timer_frequency = app->timer_frequency;
     }
-    app->time = nanotime() / 1000000.0;
+    app->time = seconds_since_start();
 }
 
 static void redraw(int x, int y, int w, int h) {
@@ -396,7 +401,7 @@ static void menu_add_item(NSMenu* submenu, NSString* title, SEL callback, NSStri
 }
 
 int main(int argc, const char* argv[]) {
-    (void)nanotime(); // initialize time0
+    (void)seconds_since_start(); // to initialize start_time
     app = run(argc, argv);
     if (app == null) { return 0; }
     app->stop = stop;
@@ -408,12 +413,12 @@ int main(int argc, const char* argv[]) {
     a.activationPolicy = NSApplicationActivationPolicyRegular;
     NSMenuItem* i = NSMenuItem.new;
     i.submenu = NSMenu.new;
-//  i.submenu.autoenablesItems = false;
+    i.submenu.autoenablesItems = false;
     NSString* quit = [@"Quit " stringByAppendingString: NSProcessInfo.processInfo.processName];
     menu_add_item(i.submenu, @"Preferences...", @selector(preferences:), @",");
-    menu_add_item(i.submenu, @"Hide", @selector(hide:), @"H");
-    menu_add_item(i.submenu, @"Enter Full Screen", @selector(toggleFullScreen:), @"F");
-    menu_add_item(i.submenu, quit, @selector(stop:), @"Q");
+    menu_add_item(i.submenu, @"Hide", @selector(hide:), @"h");
+    menu_add_item(i.submenu, @"Enter Full Screen", @selector(toggleFullScreen:), @"f");
+    menu_add_item(i.submenu, quit, @selector(stop:), @"q");
     a.mainMenu = NSMenu.new;
     [a.mainMenu addItem: i];
     AppDelegate* d = AppDelegate.new;

@@ -68,7 +68,7 @@ typedef struct app_s {
     int timer_frequency; /* number of timer() callbacks per second or zero */
     void* gl_pixel_format;
     void* gl_context;
-    double time;   /* time in milliseconds since application started */
+    double time;   /* time in seconds since application start */
     void* window;
     void (*shape)(int x, int y, int width, int height); /* on OSX OpenGL does not have context here */
     void (*paint)(int x, int y, int w, int h);
