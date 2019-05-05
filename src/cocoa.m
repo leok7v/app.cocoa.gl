@@ -108,7 +108,6 @@ static Window* create_window() {
     window.opaque = true;
     window.hidesOnDeactivate = full_screen;
     window.acceptsMouseMovedEvents = true;
-//  window.contentView = null;
     window.collectionBehavior |= NSWindowCollectionBehaviorFullScreenPrimary;
     window.titlebarAppearsTransparent  = true;
     window.titleVisibility = NSWindowTitleHidden;
@@ -234,6 +233,36 @@ static void mouse_input(NSEvent* e, int kind) {
     app->input(&ie);
 }
 
+@interface OpenGLView : NSOpenGLView { }
+- (void) drawRect: (NSRect) bounds;
+@end
+
+@implementation OpenGLView : NSOpenGLView
+
+- (void) drawRect: (NSRect) bounds {
+    NSRect rc = [self convertRectToBacking: [self bounds]];
+//  printf("drawRect\n");
+    (void)self.openGLContext.makeCurrentContext;
+//  update_state(self);
+    //  CGLLockContext(context.CGLContextObj);
+    app->paint(0, 0, app->window_w, app->window_h);
+    (void)self.openGLContext.flushBuffer;
+    //  CGLFlushDrawable(context.CGLContextObj);
+    (void)NSOpenGLContext.clearCurrentContext;
+}
+
+- (void)reshape {
+    (void)self.openGLContext.update;
+//  updateAndDraw();
+}
+
+- (BOOL) acceptsFirstResponder { return true; }
+- (BOOL) becomeFirstResponder { return true; }
+- (BOOL) resignFirstResponder { return true; }
+- (BOOL)isFlipped  { return true; }
+
+@end
+
 @implementation Window : NSWindow
 
 - (instancetype) initWithContentRect: (NSRect) r styleMask:(NSWindowStyleMask) mask backing:(NSBackingStoreType) bst defer: (BOOL) flag {
@@ -249,7 +278,14 @@ static void mouse_input(NSEvent* e, int kind) {
         };
         pixel_format  = [NSOpenGLPixelFormat.alloc initWithAttributes: attrs];
         context = [NSOpenGLContext.alloc initWithFormat: pixel_format shareContext: null];
-        context.view = self.contentView;
+        OpenGLView* cv = [OpenGLView.alloc initWithFrame: r pixelFormat: pixel_format];
+        cv.wantsLayer = false;
+        cv.wantsBestResolutionOpenGLSurface = true; // disables `retina magnification'
+        // drawRect must do: [self convertRectToBacking:[self bounds]];
+        self.contentView = cv;
+        context.view = cv;
+        cv.openGLContext = context;
+        CGLEnable(context.CGLContextObj, kCGLCECrashOnRemovedFunctions);
         self.viewsNeedDisplay = true;
     }
     return self;
@@ -287,13 +323,18 @@ static void mouse_input(NSEvent* e, int kind) {
     }
 }
 
+#if 0
 - (void) displayIfNeeded {
     update_state(self);
+//  CGLLockContext(context.CGLContextObj);
     (void)context.makeCurrentContext;
     app->paint(0, 0, app->window_w, app->window_h);
     (void)context.flushBuffer;
+//  CGLFlushDrawable(context.CGLContextObj);
     (void)NSOpenGLContext.clearCurrentContext;
+//  CGLUnlockContext(context.CGLContextObj);
 }
+#endif
 
 @end
 
