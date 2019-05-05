@@ -13,7 +13,7 @@ static void shape(int x, int y, int w, int h) {
 }
 
 static void paint(int x, int y, int w, int h) {
-//  printf("[%06d] paint(%d,%d %dx%d)\n", gettid(), x, y, w, h);
+    printf("[%06d] paint(%d,%d %dx%d)\n", gettid(), x, y, w, h);
     vc3d_paint(vc, x, y, w, h);
 }
 
@@ -29,7 +29,7 @@ static void input(input_event_t* e) {
             app.window_state ^= WINDOW_STATE_FULLSCREEN;
         }
         if (e->ch == 'q' || e->ch == 'Q') {
-            app.stop();
+            app.quit();
         }
         if (e->ch == 'h' || e->ch == 'H') {
             app.window_state ^= WINDOW_STATE_HIDDEN;
@@ -67,8 +67,14 @@ static void timer() {
 //  app.redraw(0, 0, app.window_w, app.window_h);
 }
 
+static void later_callback(void* that, void* message) {
+    printf("[%06d] later_callback %.6f %s\n", gettid(), app.time, message);
+    app.later(2.5, null, "in 2.5 seconds", later_callback);
+}
+
 static void prefs() {
     printf("preferences\n");
+    app.later(0.5, null, "in 0.5 seconds", later_callback);
 }
 
 static int exits() {

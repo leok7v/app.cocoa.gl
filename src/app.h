@@ -77,9 +77,9 @@ typedef struct app_s {
     void (*prefs)(); /* Settings|Preferences invoked by user or system */
     int  (*exits)(); /* "exit status" aka process exit code */
     /* following functions are defined by system */
-    void (*later)(void* that, void* message, void (*callback)(void* _that, void* _message)); /* post a message */
+    void (*later)(double seconds, void* that, void* message, void (*callback)(void* _that, void* _message)); /* post a message */
     void (*redraw)(int x, int y, int w, int h); /* application may call redraw() to invalidate portion of the screen */
-    void (*stop)(); /* application may call stop() to request quiting or exiting application. quits() will be called */
+    void (*quit)(); /* application may call quit() to request exiting application dispatch loop. quits() will be called */
     void* (*map_resource)(const char* resource_name, int* size); // returns address and size of resource (naming system specific)
     void  (*unmap_resource)(void* a, int size); // unmaps the resource
 } app_t;

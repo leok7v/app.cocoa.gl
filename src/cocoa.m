@@ -234,28 +234,30 @@ static void mouse_input(NSEvent* e, int kind) {
 
 @implementation OpenGLView : NSOpenGLView
 
-- (void) drawRect: (NSRect) bounds {
-    NSRect rc = [self convertRectToBacking: [self bounds]];
-//  printf("drawRect\n");
+- (void) drawRect: (NSRect) rect {
+    NSRect bounds = self.bounds;
+    NSRect brc = [self convertRectToBacking: bounds];
+    printf("drawRect rect=%.1f %.1f %.1f %.1f bounds=%.1f %.1f %.1f %.1f brc=%.1f %.1f %.1f %.1f\n",
+           rect.origin.x, rect.origin.y, rect.size.width, rect.size.height,
+           bounds.origin.x, bounds.origin.y, bounds.size.width, bounds.size.height,
+           brc.origin.x, brc.origin.y, brc.size.width, brc.size.height);
     (void)self.openGLContext.makeCurrentContext;
     update_state(self.window);
-    //  CGLLockContext(context.CGLContextObj);
     app->paint(0, 0, app->window_w, app->window_h);
     (void)self.openGLContext.flushBuffer;
-    //  CGLFlushDrawable(context.CGLContextObj);
     (void)NSOpenGLContext.clearCurrentContext;
 }
 
 - (void)reshape {
     [super reshape];
-   [self.openGLContext update];
-//  updateAndDraw();
+    [self.openGLContext update];
+    // TODO: not clear if it is needed
 }
 
 - (BOOL) acceptsFirstResponder { return true; }
 - (BOOL) becomeFirstResponder { return true; }
 - (BOOL) resignFirstResponder { return true; }
-- (BOOL) isFlipped  { return true; }
+- (BOOL) isFlipped  { return true; } // this affects convertRectToBacking (will be x,y (0, -h))
 
 @end
 
@@ -290,7 +292,7 @@ static void mouse_input(NSEvent* e, int kind) {
 - (void) sendEvent: (NSEvent*) e { update_state(self); [super sendEvent: e]; }
 - (BOOL) canBecomeKeyWindow { return true; } // https://stackoverflow.com/questions/11622255/keydown-not-being-called
 - (BOOL) canBecomeMainWindow { return true; }
-- (void) close { (void)super.close; app->stop(); }
+- (void) close { (void)super.close; app->quit(); }
 //  calling super.keyDown will play a keyboar input refused sound
 - (void) keyDown: (NSEvent*) e { keyboad_input(self, e, INPUT_KEYDOWN); }
 - (void) keyUp: (NSEvent*) e { keyboad_input(self, e, INPUT_KEYUP); [super keyUp: e]; }
@@ -396,15 +398,18 @@ static void mouse_input(NSEvent* e, int kind) {
 /* flagsChanged must be in NSWindowDelegate orherwise Cocoa assert on invalid state */
 - (void) flagsChanged: (NSEvent*) e { keyboad_input(window, e, 0); [self flagsChanged: e]; }
 
+- (void) updateState { update_state(window); }
+
 @end
 
-static void later(void* that, void* message, void (*callback)(void* _that, void* _message)) {
-    dispatch_async(dispatch_get_main_queue(), ^{
+static void later(double seconds, void* that, void* message, void (*callback)(void* _that, void* _message)) {
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (uint64_t)(seconds * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [(AppDelegate*)NSApplication.sharedApplication.delegate updateState];
         callback(that, message);
     });
 }
 
-static void stop() {
+static void quit() {
     [NSApplication.sharedApplication stop: NSApplication.sharedApplication];
 }
 
@@ -441,7 +446,7 @@ int main(int argc, const char* argv[]) {
     (void)seconds_since_start(); // to initialize start_time
     app = run(argc, argv);
     if (app == null) { return 0; }
-    app->stop = stop;
+    app->quit = quit;
     app->later = later;
     app->redraw = redraw;
     app->map_resource = map_resource;
