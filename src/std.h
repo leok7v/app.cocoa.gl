@@ -1,4 +1,4 @@
-#pragma once // posix plaform related unification
+#pragma once // `std' posix headers
 #include <stdint.h>
 #include <math.h>
 #include <stdlib.h>

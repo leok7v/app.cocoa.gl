@@ -71,10 +71,10 @@ static void prefs() {
     printf("preferences\n");
 }
 
-static int quits() {
+static int exits() {
     printf("about to quit\n");
     vc3d_destroy(vc);
-    return 0;
+    return EXIT_SUCCESS; // exit status (because sysexits.h is no posix)
 }
 
 app_t* run(int argc, const char* argv[]) {
@@ -83,7 +83,7 @@ app_t* run(int argc, const char* argv[]) {
     app.paint = paint;
     app.timer = timer;
     app.prefs = prefs;
-    app.quits = quits;
+    app.exits = exits;
 //  app.window_state = WINDOW_STATE_FULLSCREEN;
     app.window_min_w = 800;
     app.window_min_h = 600;

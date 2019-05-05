@@ -1,5 +1,5 @@
 #pragma once
-#include "posix.h"
+#include "std.h"
 #include "keyboard.h"
 
 BEGIN_C
@@ -75,7 +75,7 @@ typedef struct app_s {
     void (*input)(input_event_t* e);
     void (*timer)();
     void (*prefs)(); /* Settings|Preferences invoked by user or system */
-    int  (*quits)(); /* application about to exit gracefully (returns 0) or with error code */
+    int  (*exits)(); /* "exit status" aka process exit code */
     /* following functions are defined by system */
     void (*later)(void* that, void* message, void (*callback)(void* _that, void* _message)); /* post a message */
     void (*redraw)(int x, int y, int w, int h); /* application may call redraw() to invalidate portion of the screen */
@@ -120,7 +120,7 @@ app_t* run(int argc, const char* argv[]);
  
    if any of the aforementioned functions are null - they are not called at all.
 
-   invalidate() may be called by application to invalidate particular region in application coordinates.
+   redraw() may be called by application to invalidate particular region in application coordinates.
  */
 
 

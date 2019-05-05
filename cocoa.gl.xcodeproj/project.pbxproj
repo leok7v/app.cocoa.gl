@@ -23,7 +23,7 @@
 /* Begin PBXFileReference section */
 		B300E10920D140BC00444AAB /* math4x4.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = math4x4.c; path = src/math4x4.c; sourceTree = "<group>"; };
 		B300E10B20D140C800444AAB /* math4x4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = math4x4.h; path = src/math4x4.h; sourceTree = "<group>"; };
-		B300E10C20D1420300444AAB /* posix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = posix.h; path = src/posix.h; sourceTree = "<group>"; };
+		B300E10C20D1420300444AAB /* std.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = std.h; path = src/std.h; sourceTree = "<group>"; };
 		B300E10E20D1498900444AAB /* intersect_triangle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = intersect_triangle.h; path = ext/intersect_triangle.h; sourceTree = SOURCE_ROOT; };
 		B300E10F20D1498900444AAB /* intersect_triangle.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = intersect_triangle.c; path = ext/intersect_triangle.c; sourceTree = SOURCE_ROOT; };
 		B32CC4E21F172ADD00AC9F60 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
@@ -88,7 +88,7 @@
 		B3D988901F11C77200A616F1 /* src */ = {
 			isa = PBXGroup;
 			children = (
-				B300E10C20D1420300444AAB /* posix.h */,
+				B300E10C20D1420300444AAB /* std.h */,
 				B300E10B20D140C800444AAB /* math4x4.h */,
 				B300E10920D140BC00444AAB /* math4x4.c */,
 				B37FFA2C1F28767A00D351CF /* app.c */,
@@ -146,7 +146,7 @@
 		B3DE1EEB1F10B1B3000C223D /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0930;
+				LastUpgradeCheck = 1020;
 				ORGANIZATIONNAME = leo;
 				TargetAttributes = {
 					B3DE1EF21F10B1B3000C223D = {
@@ -160,6 +160,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 			);
@@ -208,6 +209,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
@@ -263,6 +265,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";

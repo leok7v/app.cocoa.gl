@@ -20,7 +20,7 @@
 #define min(a,b) ((a) < (b) ? (a) : (b))
 #define max(a,b) ((a) > (b) ? (a) : (b))
 
-// static uint64_t gettid() { uint64_t tid; pthread_threadid_np(NULL, &tid); return tid; }
+// static uint64_t gettid() { uint64_t tid; pthread_threadid_np(null, &tid); return tid; }
 
 static int64_t nanotime() {
     static int64_t time0;
@@ -236,7 +236,7 @@ static void mouse_input(NSEvent* e, int kind) {
     if (self != null) {
         static NSOpenGLPixelFormatAttribute attrs[] = {
             NSOpenGLPFADoubleBuffer,
-            NSOpenGLPFADepthSize, 24,
+            NSOpenGLPFADepthSize, 32,
             // Must specify the 3.2 Core Profile to use OpenGL 3.2
             NSOpenGLPFAOpenGLProfile,
             NSOpenGLProfileVersion4_1Core, // NSOpenGLProfileVersion3_2Core,
@@ -249,7 +249,6 @@ static void mouse_input(NSEvent* e, int kind) {
     }
     return self;
 }
-
 
 - (void) sendEvent: (NSEvent*) e { update_state(self); [super sendEvent: e]; }
 - (BOOL) canBecomeKeyWindow { return true; } // https://stackoverflow.com/questions/11622255/keydown-not-being-called
@@ -285,10 +284,10 @@ static void mouse_input(NSEvent* e, int kind) {
 
 - (void) displayIfNeeded {
     update_state(self);
-    [context makeCurrentContext];
+    (void)context.makeCurrentContext;
     app->paint(0, 0, app->window_w, app->window_h);
-    [context flushBuffer];
-    [NSOpenGLContext clearCurrentContext];
+    (void)context.flushBuffer;
+    (void)NSOpenGLContext.clearCurrentContext;
 }
 
 @end
@@ -321,9 +320,9 @@ static void mouse_input(NSEvent* e, int kind) {
 
 // On OSX windowDidMove, windowDidResize cannot call reshape(); here because there is no glContext
 
-- (void)windowDidMove: (NSNotification*) n { reshape(window); }
+- (void) windowDidMove: (NSNotification*) n { reshape(window); }
 
-- (void)windowDidResize: (NSNotification*) n {
+- (void) windowDidResize: (NSNotification*) n {
     [window->context makeCurrentContext]; // in case reshape() needs to do OpenGL calls
     [window->context update]; // this is very important - resize does not work without it!
     reshape(window); // see: https://lists.apple.com/archives/cocoa-dev/2006/Oct/msg01512.html
@@ -392,6 +391,10 @@ static void unmap_resource(void* a, int size) {
     munmap(a, size);
 }
 
+static void menu_add_item(NSMenu* submenu, NSString* title, SEL callback, NSString* key) {
+    [submenu addItem: [NSMenuItem.alloc initWithTitle: title action: callback keyEquivalent: key]];
+}
+
 int main(int argc, const char* argv[]) {
     (void)nanotime(); // initialize time0
     app = run(argc, argv);
@@ -405,15 +408,17 @@ int main(int argc, const char* argv[]) {
     a.activationPolicy = NSApplicationActivationPolicyRegular;
     NSMenuItem* i = NSMenuItem.new;
     i.submenu = NSMenu.new;
+//  i.submenu.autoenablesItems = false;
     NSString* quit = [@"Quit " stringByAppendingString: NSProcessInfo.processInfo.processName];
-    [i.submenu addItem: [[NSMenuItem alloc] initWithTitle: @"Preferences..." action: @selector(preferences:) keyEquivalent: @","]];
-    [i.submenu addItem: [[NSMenuItem alloc] initWithTitle: @"Hide" action: @selector(hide:) keyEquivalent: @"H"]];
-    [i.submenu addItem: [[NSMenuItem alloc] initWithTitle: @"Enter Full Screen" action: @selector(toggleFullScreen:) keyEquivalent: @"F"]];
-    [i.submenu addItem: [[NSMenuItem alloc] initWithTitle: quit action: @selector(stop:) keyEquivalent: @"q"]];
+    menu_add_item(i.submenu, @"Preferences...", @selector(preferences:), @",");
+    menu_add_item(i.submenu, @"Hide", @selector(hide:), @"H");
+    menu_add_item(i.submenu, @"Enter Full Screen", @selector(toggleFullScreen:), @"F");
+    menu_add_item(i.submenu, quit, @selector(stop:), @"Q");
     a.mainMenu = NSMenu.new;
     [a.mainMenu addItem: i];
-    AppDelegate* d = AppDelegate.new; // cannot collapse this and next line because .delegate is weak
+    AppDelegate* d = AppDelegate.new;
     a.delegate = d;
     (void)a.run;
-    return app->quits != null ? app->quits() : 0;
+    int exit_status = app->exits != null ? app->exits() : 0;
+    return exit_status;
 }

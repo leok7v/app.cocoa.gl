@@ -103,23 +103,23 @@ void compile_shaders(vc3d_t_* vc) {
     GLuint fragment_shader_id = glCreateShader(GL_FRAGMENT_SHADER);
     GLint Result = GL_FALSE;
     int InfoLogLength;
-    glShaderSource(vertex_shader_id, 1, &vertex_shader_code , NULL);
+    glShaderSource(vertex_shader_id, 1, &vertex_shader_code , null);
     glCompileShader(vertex_shader_id);
     glGetShaderiv(vertex_shader_id, GL_COMPILE_STATUS, &Result);
     glGetShaderiv(vertex_shader_id, GL_INFO_LOG_LENGTH, &InfoLogLength);
     if (InfoLogLength > 0) {
         char message[InfoLogLength + 1];
-        glGetShaderInfoLog(vertex_shader_id, InfoLogLength, NULL, message);
+        glGetShaderInfoLog(vertex_shader_id, InfoLogLength, null, message);
         printf("%s\n", message);
         exit(1);
     }
-    glShaderSource(fragment_shader_id, 1, &fragment_shader_code , NULL);
+    glShaderSource(fragment_shader_id, 1, &fragment_shader_code , null);
     glCompileShader(fragment_shader_id);
     glGetShaderiv(fragment_shader_id, GL_COMPILE_STATUS, &Result);
     glGetShaderiv(fragment_shader_id, GL_INFO_LOG_LENGTH, &InfoLogLength);
     if (InfoLogLength > 0) {
         char message[InfoLogLength + 1];
-        glGetShaderInfoLog(fragment_shader_id, InfoLogLength, NULL, message);
+        glGetShaderInfoLog(fragment_shader_id, InfoLogLength, null, message);
         printf("%s\n", message);
     }
     vc->program_id = glCreateProgram();
@@ -131,7 +131,7 @@ void compile_shaders(vc3d_t_* vc) {
     glGetProgramiv(vc->program_id, GL_INFO_LOG_LENGTH, &InfoLogLength);
     if (InfoLogLength > 0) {
         char message[InfoLogLength+1];
-        glGetProgramInfoLog(vc->program_id, InfoLogLength, NULL, &message[0]);
+        glGetProgramInfoLog(vc->program_id, InfoLogLength, null, &message[0]);
         printf("%s\n", message);
     }
     glDetachShader(vc->program_id, vertex_shader_id);
