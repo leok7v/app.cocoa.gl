@@ -56,6 +56,13 @@ typedef struct input_event_s {
 } input_event_t;
 
 typedef struct app_s {
+    void (*init)(int argc, const char* argv[]);
+    void (*shape)(int x, int y, int width, int height); /* on OSX OpenGL does not have context here */
+    void (*paint)(int x, int y, int w, int h);
+    void (*input)(input_event_t* e);
+    void (*timer)();
+    void (*prefs)(); /* Settings|Preferences invoked by user or system */
+    int  (*exits)(); /* "exit status" aka process exit code */
     int window_state;
     int window_x;     /* top left corner x in pixels in absolute monitors space coordinates */
     int window_y;     /* top left corner y in pixels in absolute monitors space coordinates */
@@ -70,24 +77,18 @@ typedef struct app_s {
     void* gl_context;
     double time;   /* time in seconds since application start */
     void* window;
-    void (*shape)(int x, int y, int width, int height); /* on OSX OpenGL does not have context here */
-    void (*paint)(int x, int y, int w, int h);
-    void (*input)(input_event_t* e);
-    void (*timer)();
-    void (*prefs)(); /* Settings|Preferences invoked by user or system */
-    int  (*exits)(); /* "exit status" aka process exit code */
-    /* following functions are defined by system */
-    void (*later)(double seconds, void* that, void* message, void (*callback)(void* _that, void* _message)); /* post a message */
-    void (*redraw)(int x, int y, int w, int h); /* application may call redraw() to invalidate portion of the screen */
-    void (*quit)(); /* application may call quit() to request exiting application dispatch loop. quits() will be called */
-    void* (*map_resource)(const char* resource_name, int* size); // returns address and size of resource (naming system specific)
-    void  (*unmap_resource)(void* a, int size); // unmaps the resource
 } app_t;
 
-/* if run returns null the application terminates, otherwise it does into UI even loop.
-   if you need return result from command line tool use exit(n) */
+typedef struct startup_s {
+    void (*quit)(); /* application may call quit() to request exiting application dispatch loop. quits() will be called */
+    void (*later)(double seconds, void* that, void* message, void (*callback)(void* _that, void* _message)); /* post a message */
+    void (*redraw)(int x, int y, int w, int h); /* application may call redraw() to invalidate portion of the screen */
+    void* (*map_resource)(const char* resource_name, int* size); // returns address and size of resource (naming system specific)
+    void  (*unmap_resource)(void* a, int size); // unmaps the resource
+} startup_t;
 
-app_t* run(int argc, const char* argv[]);
+extern app_t     app;
+extern startup_t startup;
 
 /* 
    Application can request its window to be moved or reshaped by changing its x/y and or width/height

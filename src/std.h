@@ -4,8 +4,14 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <memory.h>
+#include <assert.h>
+#include <fcntl.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+
 #ifdef __APPLE__
-#include <pthread/pthread.h>
+#include <pthread.h>
+#include <unistd.h>
 #endif
 
 #ifdef __cplusplus

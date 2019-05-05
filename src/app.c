@@ -4,7 +4,6 @@
 
 BEGIN_C
 
-static app_t app;
 static vc3d_t vc;
 
 static void shape(int x, int y, int w, int h) {
@@ -29,7 +28,7 @@ static void input(input_event_t* e) {
             app.window_state ^= WINDOW_STATE_FULLSCREEN;
         }
         if (e->ch == 'q' || e->ch == 'Q') {
-            app.quit();
+            startup.quit();
         }
         if (e->ch == 'h' || e->ch == 'H') {
             app.window_state ^= WINDOW_STATE_HIDDEN;
@@ -69,12 +68,12 @@ static void timer() {
 
 static void later_callback(void* that, void* message) {
     printf("[%06d] later_callback %.6f %s\n", gettid(), app.time, message);
-    app.later(2.5, null, "in 2.5 seconds", later_callback);
+    startup.later(2.5, null, "in 2.5 seconds", later_callback);
 }
 
 static void prefs() {
     printf("preferences\n");
-    app.later(0.5, null, "in 0.5 seconds", later_callback);
+    startup.later(0.5, null, "in 0.5 seconds", later_callback);
 }
 
 static int exits() {
@@ -83,19 +82,29 @@ static int exits() {
     return EXIT_SUCCESS; // exit status (because sysexits.h is no posix)
 }
 
-app_t* run(int argc, const char* argv[]) {
+void init(int argc, const char* argv[]) {
     app.input = input;
     app.shape = shape;
     app.paint = paint;
     app.timer = timer;
     app.prefs = prefs;
     app.exits = exits;
-//  app.window_state = WINDOW_STATE_FULLSCREEN;
+    //  app.window_state = WINDOW_STATE_FULLSCREEN;
     app.window_min_w = 800;
     app.window_min_h = 600;
     app.timer_frequency = 60; // Hz
     vc = vc3d_create(&app);
-    return &app;
 }
+
+app_t app = {
+    init,
+    shape,
+    paint,
+    input,
+    timer,
+    prefs,
+    exits,
+};
+
 
 END_C

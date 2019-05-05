@@ -11,9 +11,9 @@
 		B300E11020D1498900444AAB /* intersect_triangle.c in Sources */ = {isa = PBXBuildFile; fileRef = B300E10F20D1498900444AAB /* intersect_triangle.c */; };
 		B32CC4E31F172ADD00AC9F60 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B32CC4E21F172ADD00AC9F60 /* OpenGL.framework */; };
 		B37FFA321F28767A00D351CF /* app.c in Sources */ = {isa = PBXBuildFile; fileRef = B37FFA2C1F28767A00D351CF /* app.c */; };
-		B37FFA331F28767A00D351CF /* cocoa.m in Sources */ = {isa = PBXBuildFile; fileRef = B37FFA2E1F28767A00D351CF /* cocoa.m */; };
+		B37FFA331F28767A00D351CF /* main.osx.ogl.m in Sources */ = {isa = PBXBuildFile; fileRef = B37FFA2E1F28767A00D351CF /* main.osx.ogl.m */; };
 		B37FFA341F28767A00D351CF /* vc3d.c in Sources */ = {isa = PBXBuildFile; fileRef = B37FFA301F28767A00D351CF /* vc3d.c */; };
-		B39F15151F28792C00EF4186 /* cocoa.gl.icns in Resources */ = {isa = PBXBuildFile; fileRef = B39F15141F28792C00EF4186 /* cocoa.gl.icns */; };
+		B39F15151F28792C00EF4186 /* icon.icns in Resources */ = {isa = PBXBuildFile; fileRef = B39F15141F28792C00EF4186 /* icon.icns */; };
 		B3B0978020D15B4D008DF8E5 /* tritri_isectline.c in Sources */ = {isa = PBXBuildFile; fileRef = B3B0977C20D15B4D008DF8E5 /* tritri_isectline.c */; };
 		B3B0978120D15B4D008DF8E5 /* tribox3.c in Sources */ = {isa = PBXBuildFile; fileRef = B3B0977D20D15B4D008DF8E5 /* tribox3.c */; };
 		B3B0978220D15B4D008DF8E5 /* opttritri.c in Sources */ = {isa = PBXBuildFile; fileRef = B3B0977E20D15B4D008DF8E5 /* opttritri.c */; };
@@ -30,11 +30,11 @@
 		B37FFA291F28766700D351CF /* info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = info.plist; path = src/info.plist; sourceTree = "<group>"; };
 		B37FFA2C1F28767A00D351CF /* app.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = app.c; path = src/app.c; sourceTree = "<group>"; };
 		B37FFA2D1F28767A00D351CF /* app.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = app.h; path = src/app.h; sourceTree = "<group>"; };
-		B37FFA2E1F28767A00D351CF /* cocoa.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = cocoa.m; path = src/cocoa.m; sourceTree = "<group>"; };
+		B37FFA2E1F28767A00D351CF /* main.osx.ogl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.osx.ogl.m; path = src/main.osx.ogl.m; sourceTree = "<group>"; };
 		B37FFA2F1F28767A00D351CF /* keyboard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = keyboard.h; path = src/keyboard.h; sourceTree = "<group>"; };
 		B37FFA301F28767A00D351CF /* vc3d.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = vc3d.c; path = src/vc3d.c; sourceTree = "<group>"; };
 		B37FFA311F28767A00D351CF /* vc3d.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = vc3d.h; path = src/vc3d.h; sourceTree = "<group>"; };
-		B39F15141F28792C00EF4186 /* cocoa.gl.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = cocoa.gl.icns; path = src/cocoa.gl.icns; sourceTree = "<group>"; };
+		B39F15141F28792C00EF4186 /* icon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = icon.icns; path = src/icon.icns; sourceTree = "<group>"; };
 		B3B0977C20D15B4D008DF8E5 /* tritri_isectline.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = tritri_isectline.c; path = ext/intersections/tritri_isectline.c; sourceTree = SOURCE_ROOT; };
 		B3B0977D20D15B4D008DF8E5 /* tribox3.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = tribox3.c; path = ext/intersections/tribox3.c; sourceTree = SOURCE_ROOT; };
 		B3B0977E20D15B4D008DF8E5 /* opttritri.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = opttritri.c; path = ext/intersections/opttritri.c; sourceTree = SOURCE_ROOT; };
@@ -71,7 +71,7 @@
 		B32CC4DB1F17291800AC9F60 /* res */ = {
 			isa = PBXGroup;
 			children = (
-				B39F15141F28792C00EF4186 /* cocoa.gl.icns */,
+				B39F15141F28792C00EF4186 /* icon.icns */,
 				B37FFA291F28766700D351CF /* info.plist */,
 			);
 			name = res;
@@ -93,7 +93,7 @@
 				B300E10920D140BC00444AAB /* math4x4.c */,
 				B37FFA2C1F28767A00D351CF /* app.c */,
 				B37FFA2D1F28767A00D351CF /* app.h */,
-				B37FFA2E1F28767A00D351CF /* cocoa.m */,
+				B37FFA2E1F28767A00D351CF /* main.osx.ogl.m */,
 				B37FFA2F1F28767A00D351CF /* keyboard.h */,
 				B37FFA301F28767A00D351CF /* vc3d.c */,
 				B37FFA311F28767A00D351CF /* vc3d.h */,
@@ -179,7 +179,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B39F15151F28792C00EF4186 /* cocoa.gl.icns in Resources */,
+				B39F15151F28792C00EF4186 /* icon.icns in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -192,7 +192,7 @@
 			files = (
 				B300E10A20D140BD00444AAB /* math4x4.c in Sources */,
 				B37FFA341F28767A00D351CF /* vc3d.c in Sources */,
-				B37FFA331F28767A00D351CF /* cocoa.m in Sources */,
+				B37FFA331F28767A00D351CF /* main.osx.ogl.m in Sources */,
 				B3B0978120D15B4D008DF8E5 /* tribox3.c in Sources */,
 				B3B0978320D15B4D008DF8E5 /* fromtorot.c in Sources */,
 				B300E11020D1498900444AAB /* intersect_triangle.c in Sources */,
