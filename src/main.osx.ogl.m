@@ -2,36 +2,16 @@
 #import  <Cocoa/Cocoa.h>
 #include <mach/mach_time.h>
 
-static double seconds_since_boot() {
-    static mach_timebase_info_data_t tb;
-    double t = (double)mach_absolute_time() / NSEC_PER_SEC;
-    if (tb.denom == 0) {
-        mach_timebase_info(&tb);
-    }
-    t = t * tb.numer / tb.denom;
-    return t;
-}
-
-static double seconds_since_start() {
-    static double start_time;
-    double t = seconds_since_boot();
-    if (start_time == 0) { start_time = t; }
-    return t - start_time;
-}
-
-typedef struct app_back_s {
+typedef struct shadow_copy_s {
     float mouse_x;
     float mouse_y;
     float mouse_z;
-    int window_state;
-    int window_x;
-    int window_y;
-    int window_w;
-    int window_h;
     int timer_frequency;
-} app_back_t;
+    window_state_t window_state;
+} shadow_copy_t;
 
-static app_back_t back;
+static shadow_copy_t shadow_copy;
+window_state_t window_state;
 
 @interface Window : NSWindow {
 @public
@@ -39,21 +19,20 @@ static app_back_t back;
     NSOpenGLPixelFormat* pixel_format;
     NSOpenGLContext* context;
 }
-
 - (void) setTimer: (int) frequency;
-
++ (Window*) create;
 @end
 
 static bool state_diff(int mask) {
-    return (back.window_state & mask) != (app.window_state & mask);
+    return (shadow_copy.window_state.style & mask) != (window_state.style & mask);
 }
 
 static void toggle_fullscreen(NSWindow* window) {
-    bool app_full_screen = (app.window_state & WINDOW_STATE_FULLSCREEN) != 0;
+    bool app_full_screen = (window_state.style & WINDOW_STYLE_FULLSCREEN) != 0;
     bool win_full_screen = (window.styleMask & NSFullScreenWindowMask) != 0;
     if (app_full_screen != win_full_screen) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            bool full_screen = (app.window_state & WINDOW_STATE_FULLSCREEN) != 0;
+            bool full_screen = (window_state.style & WINDOW_STYLE_FULLSCREEN) != 0;
             window.hidesOnDeactivate = full_screen;
             [window toggleFullScreen: null]; // must be on the next dispatch otherwise update_state will be called from inside itself
             if (full_screen) {
@@ -77,80 +56,56 @@ static void hide_application(NSWindow* window, bool hide) {
     });
 }
 
-static Window* create_window() {
-    bool full_screen = (app.window_state & WINDOW_STATE_FULLSCREEN) != 0;
-    int w = maximum(app.window_w, app.window_min_w);
-    int h = maximum(app.window_h, app.window_min_h);
-    NSRect r = full_screen ? NSScreen.mainScreen.frame : NSMakeRect(0, 0, w > 0 ? w : 640, h > 0 ? h : 480);
-    NSWindowStyleMask sm = NSWindowStyleMaskBorderless|NSWindowStyleMaskClosable|NSWindowStyleMaskMiniaturizable|NSWindowStyleMaskResizable|NSFullSizeContentViewWindowMask|NSTitledWindowMask;
-    Window* window = [Window.alloc initWithContentRect: r styleMask: sm backing: NSBackingStoreBuffered defer: full_screen];
-    window.opaque = true;
-    window.hidesOnDeactivate = full_screen;
-    window.acceptsMouseMovedEvents = true;
-    window.collectionBehavior |= NSWindowCollectionBehaviorFullScreenPrimary;
-    window.titlebarAppearsTransparent  = true;
-    window.titleVisibility = NSWindowTitleHidden;
-    window.movable = true;
-    if (app.window_min_w > 0 && app.window_min_h > 0) {
-        window.contentMinSize = NSMakeSize(app.window_min_w, app.window_min_h);
+static double seconds_since_boot() {
+    static mach_timebase_info_data_t tb;
+    double t = (double)mach_absolute_time() / NSEC_PER_SEC;
+    if (tb.denom == 0) {
+        mach_timebase_info(&tb);
     }
-    if (app.window_max_w > 0 && app.window_max_h > 0) {
-        window.contentMaxSize = NSMakeSize(app.window_max_w, app.window_max_h);
-    }
-    // not sure next two lines are absolutely necessary but leave it as insurance against future Apple changes:
-    window.contentView.translatesAutoresizingMaskIntoConstraints = false;
-    window.contentView.autoresizingMask = NSViewWidthSizable|NSViewHeightSizable;
-    app.window = (__bridge void *)(window);
-    NSRect frame = window.frame;
-    app.window_x = frame.origin.x;
-    app.window_y = frame.origin.y;
-    app.window_w = frame.size.width;
-    app.window_h = frame.size.height;
-    if (full_screen) { toggle_fullscreen(window); }
-    return window;
+    t = t * tb.numer / tb.denom;
+    return t;
+}
+
+static double seconds_since_start() {
+    static double start_time;
+    double t = seconds_since_boot();
+    if (start_time == 0) { start_time = t; }
+    return t - start_time;
 }
 
 static void update_state(NSWindow* window) {
-    if (state_diff(WINDOW_STATE_FULLSCREEN)) {
-        back.window_state = app.window_state; // in case update_state will be called recursively
+    if (state_diff(WINDOW_STYLE_FULLSCREEN)) {
+        shadow_copy.window_state.style = window_state.style; // in case update_state will be called recursively
         toggle_fullscreen(window);
     }
-    if (state_diff(WINDOW_STATE_HIDDEN)) {
-        back.window_state = app.window_state; // in case update_state will be called recursively
-        hide_application(window, (app.window_state & WINDOW_STATE_HIDDEN) != 0);
+    if (state_diff(WINDOW_STYLE_HIDDEN)) {
+        shadow_copy.window_state.style = window_state.style; // in case update_state will be called recursively
+        hide_application(window, (window_state.style & WINDOW_STYLE_HIDDEN) != 0);
     }
-    back.window_state = app.window_state;
-    if (app.window_x != back.window_x || app.window_y != back.window_y || app.window_w != back.window_w || app.window_h != back.window_h) {
-        window.contentSize = NSMakeSize(app.window_w, app.window_h);
-        [window setFrame: NSMakeRect(app.window_x, app.window_y, app.window_w, app.window_h) display: true animate: true];
-        back.window_x = app.window_x;
-        back.window_y = app.window_y;
-        back.window_w = app.window_w;
-        back.window_h = app.window_h;
+    shadow_copy.window_state.style = window_state.style;
+    if (window_state.x != shadow_copy.window_state.x || window_state.y != shadow_copy.window_state.y || window_state.w != shadow_copy.window_state.w || window_state.h != shadow_copy.window_state.h) {
+        window.contentSize = NSMakeSize(window_state.w, window_state.h);
+        [window setFrame: NSMakeRect(window_state.x, window_state.y, window_state.w, window_state.h) display: true animate: true];
+        shadow_copy.window_state.x = window_state.x;
+        shadow_copy.window_state.y = window_state.y;
+        shadow_copy.window_state.w = window_state.w;
+        shadow_copy.window_state.h = window_state.h;
     }
-    if (app.timer_frequency != back.timer_frequency) {
+    if (app.timer_frequency != shadow_copy.timer_frequency) {
         [(Window*)window setTimer: app.timer_frequency];
-        back.timer_frequency = app.timer_frequency;
+        shadow_copy.timer_frequency = app.timer_frequency;
     }
     app.time = seconds_since_start();
-}
-
-static void redraw(int x, int y, int w, int h) {
-    if (app.window != null) {
-        NSWindow* w = (__bridge NSWindow*)app.window;
-        w.contentView.needsDisplay = true;
-        w.viewsNeedDisplay = true;
-    }
 }
 
 static void reshape(NSWindow* window) {
     NSRect frame = window.frame;
     // shape() still has previous window position and size in `app` when called
     app.shape(frame.origin.x, frame.origin.y, frame.size.width, frame.size.height);
-    back.window_x = app.window_x = frame.origin.x;
-    back.window_y = app.window_y = frame.origin.y;
-    back.window_w = app.window_w = frame.size.width;
-    back.window_h = app.window_h = frame.size.height;
+    shadow_copy.window_state.x = window_state.x = frame.origin.x;
+    shadow_copy.window_state.y = window_state.y = frame.origin.y;
+    shadow_copy.window_state.w = window_state.w = frame.size.width;
+    shadow_copy.window_state.h = window_state.h = frame.size.height;
 }
 
 static int translate_type_to_button_number(int buttonNumber) {
@@ -185,9 +140,9 @@ static int translate_modifier_flags(NSEvent* e) {
 }
 
 static void fill_mouse_coordinates(input_event_t* ie) {
-    ie->x = back.mouse_x;
-    ie->y = back.mouse_y;
-    ie->z = back.mouse_z;
+    ie->x = shadow_copy.mouse_x;
+    ie->y = shadow_copy.mouse_y;
+    ie->z = shadow_copy.mouse_z;
 }
 
 static void keyboad_input(NSWindow* window, NSEvent* e, int mask) {
@@ -205,9 +160,9 @@ static void keyboad_input(NSWindow* window, NSEvent* e, int mask) {
 static void mouse_input(NSEvent* e, int kind) {
     input_event_t ie = {0};
     ie.kind = kind;
-    ie.x = back.mouse_x = e.locationInWindow.x;
-    ie.y = back.mouse_y = e.locationInWindow.y;
-    ie.z = back.mouse_z = e.pressure;
+    ie.x = shadow_copy.mouse_x = e.locationInWindow.x;
+    ie.y = shadow_copy.mouse_y = e.locationInWindow.y;
+    ie.z = shadow_copy.mouse_z = e.pressure;
     ie.button = translate_type_to_button_number((int)e.type);
     app.input(&ie);
 }
@@ -227,7 +182,7 @@ static void mouse_input(NSEvent* e, int kind) {
            brc.origin.x, brc.origin.y, brc.size.width, brc.size.height);
     [self.openGLContext makeCurrentContext];
     update_state(self.window);
-    app.paint(0, 0, app.window_w, app.window_h);
+    app.paint(0, 0, window_state.w, window_state.h);
     [self.openGLContext flushBuffer];
     [NSOpenGLContext clearCurrentContext];
 }
@@ -289,6 +244,7 @@ static void mouse_input(NSEvent* e, int kind) {
 // mouse motion outside window is also captured on OSX:
 - (void) mouseMoved: (NSEvent*) e { mouse_input(e, INPUT_MOUSE_MOVE); [super mouseMoved: e]; }
 - (void) mouseDragged: (NSEvent*) e { mouse_input(e, INPUT_MOUSE_DRAG); [super mouseDragged: e]; }
+
 - (void) setTimer: (int) frequency {
     assert(frequency > 0);
     uint64_t nanoseconds = frequency == 0 ? 0 : NSEC_PER_SEC / frequency;
@@ -305,31 +261,51 @@ static void mouse_input(NSEvent* e, int kind) {
     }
 }
 
-#if 0
-- (void) displayIfNeeded {
-    update_state(self);
-//  CGLLockContext(context.CGLContextObj);
-    (void)context.makeCurrentContext;
-    app.paint(0, 0, app.window_w, app.window_h);
-    (void)context.flushBuffer;
-//  CGLFlushDrawable(context.CGLContextObj);
-    (void)NSOpenGLContext.clearCurrentContext;
-//  CGLUnlockContext(context.CGLContextObj);
++ (Window*) create {
+    bool full_screen = (window_state.style & WINDOW_STYLE_FULLSCREEN) != 0;
+    int w = maximum(window_state.w, window_state.min_w);
+    int h = maximum(window_state.h, window_state.min_h);
+    NSRect r = full_screen ? NSScreen.mainScreen.frame : NSMakeRect(0, 0, w > 0 ? w : 640, h > 0 ? h : 480);
+    NSWindowStyleMask sm = NSWindowStyleMaskBorderless|NSWindowStyleMaskClosable|NSWindowStyleMaskMiniaturizable|NSWindowStyleMaskResizable|NSFullSizeContentViewWindowMask|NSTitledWindowMask;
+    Window* window = [Window.alloc initWithContentRect: r styleMask: sm backing: NSBackingStoreBuffered defer: full_screen];
+    window.opaque = true;
+    window.hidesOnDeactivate = full_screen;
+    window.acceptsMouseMovedEvents = true;
+    window.collectionBehavior |= NSWindowCollectionBehaviorFullScreenPrimary;
+    window.titlebarAppearsTransparent  = true;
+    window.titleVisibility = NSWindowTitleHidden;
+    window.movable = true;
+    if (window_state.min_w > 0 && window_state.min_h > 0) {
+        window.contentMinSize = NSMakeSize(window_state.min_w, window_state.min_h);
+    }
+    if (window_state.max_w > 0 && window_state.max_h > 0) {
+        window.contentMaxSize = NSMakeSize(window_state.max_w, window_state.max_h);
+    }
+    // not sure next two lines are absolutely necessary but leave it as insurance against future Apple changes:
+    window.contentView.translatesAutoresizingMaskIntoConstraints = false;
+    window.contentView.autoresizingMask = NSViewWidthSizable|NSViewHeightSizable;
+    NSRect frame = window.frame;
+    window_state.x = frame.origin.x;
+    window_state.y = frame.origin.y;
+    window_state.w = frame.size.width;
+    window_state.h = frame.size.height;
+    if (full_screen) { toggle_fullscreen(window); }
+    return window;
 }
-#endif
 
 @end
 
 @interface AppDelegate : NSObject <NSApplicationDelegate, NSWindowDelegate> {
-    Window* window;
+    @public Window* window;
 }
 @end
 
-@implementation AppDelegate : NSObject
+@implementation AppDelegate : NSObject 
 
 - (id) init {
-    if (self = [super init]) {
-        window = create_window();
+    self = super.init;
+    if (self != null) {
+        window = Window.create;
         window.delegate = self;
     }
     return self;
@@ -341,37 +317,32 @@ static void mouse_input(NSEvent* e, int kind) {
 }
 
 - (void) applicationDidFinishLaunching:(NSNotification *)notification { [window makeKeyAndOrderFront: self]; }
-
 - (void) preferences: (nullable id)sender { if (app.prefs != null) { app.prefs(); } }
-
 - (void) hide: (nullable id)sender { hide_application(window, true); }
-
-// On OSX windowDidMove, windowDidResize cannot call reshape(); here because there is no glContext
-
 - (void) windowDidMove: (NSNotification*) n { reshape(window); }
 
 - (void) windowDidResize: (NSNotification*) n {
     [window->context makeCurrentContext]; // in case reshape() needs to do OpenGL calls
     [window->context update]; // this is very important - resize does not work without it!
-    reshape(window); // see: https://lists.apple.com/archives/cocoa-dev/2006/Oct/msg01512.html
+    reshape(window);
     [NSOpenGLContext clearCurrentContext];
 }
 
 - (void) applicationDidHide: (NSNotification*) n {
-    app.window_state |= WINDOW_STATE_HIDDEN;
-    back.window_state |= WINDOW_STATE_HIDDEN;
+    window_state.style |= WINDOW_STYLE_HIDDEN;
+    shadow_copy.window_state.style |= WINDOW_STYLE_HIDDEN;
     update_state(window);
 }
 
 - (void) applicationDidUnhide: (NSNotification*) n {
-    app.window_state &= ~WINDOW_STATE_HIDDEN;
-    back.window_state &= ~WINDOW_STATE_HIDDEN;
+    window_state.style &= ~WINDOW_STYLE_HIDDEN;
+    shadow_copy.window_state.style &= ~WINDOW_STYLE_HIDDEN;
     update_state(window);
 }
 
 - (void) applicationDidBecomeActive: (NSNotification*) n {
-    app.window_state &= ~WINDOW_STATE_HIDDEN;
-    back.window_state &= ~WINDOW_STATE_HIDDEN;
+    window_state.style &= ~WINDOW_STYLE_HIDDEN;
+    shadow_copy.window_state.style &= ~WINDOW_STYLE_HIDDEN;
     update_state(window);
     hide_application(window, false);
 }
@@ -379,18 +350,17 @@ static void mouse_input(NSEvent* e, int kind) {
 - (BOOL) applicationShouldTerminateAfterLastWindowClosed: (NSApplication*) sender { return true; }
 - (BOOL) acceptsFirstResponder { return true; } /* receive key events */
 
-/* flagsChanged must be in NSWindowDelegate orherwise Cocoa assert on invalid state */
 - (void) flagsChanged: (NSEvent*) e { keyboad_input(window, e, 0); [self flagsChanged: e]; }
-
 - (void) updateState { update_state(window); }
 
 @end
 
-static void later(double seconds, void* that, void* message, void (*callback)(void* _that, void* _message)) {
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (uint64_t)(seconds * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [(AppDelegate*)NSApplication.sharedApplication.delegate updateState];
-        callback(that, message);
-    });
+static void redraw(int x, int y, int w, int h) {
+    AppDelegate* d = (AppDelegate*)NSApplication.sharedApplication.delegate;
+    if (d->window != null) {
+        d->window.contentView.needsDisplay = true;
+        d->window.viewsNeedDisplay = true;
+    }
 }
 
 static void quit() {
@@ -422,12 +392,24 @@ static void unmap_resource(void* a, int size) {
     munmap(a, size);
 }
 
+static void update() {
+    [(AppDelegate*)NSApplication.sharedApplication.delegate updateState];
+}
+
+static void later(double seconds, void* that, void* message, void (*callback)(void* _that, void* _message)) {
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (uint64_t)(seconds * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        update();
+        callback(that, message);
+    });
+}
+
 startup_t startup = {
     quit,
     later,
     redraw,
     map_resource,
-    unmap_resource
+    unmap_resource,
+    update
 };
 
 static void menu_add_item(NSMenu* submenu, NSString* title, SEL callback, NSString* key) {

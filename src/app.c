@@ -25,13 +25,13 @@ static void input(input_event_t* e) {
             printf("ch=%d 0x%04X key=%d 0x%02X ", e->ch, e->ch, e->key, e->key);
         }
         if (e->ch == 'f' || e->ch == 'F' || e->key == KEY_ESCAPE) {
-            app.window_state ^= WINDOW_STATE_FULLSCREEN;
+            window_state.style ^= WINDOW_STYLE_FULLSCREEN;
         }
         if (e->ch == 'q' || e->ch == 'Q') {
             startup.quit();
         }
         if (e->ch == 'h' || e->ch == 'H') {
-            app.window_state ^= WINDOW_STATE_HIDDEN;
+            window_state.style ^= WINDOW_STYLE_HIDDEN;
         }
         if (e->key == KEY_LEFT_ARROW)  { printf("\u21E6 "); }
         if (e->key == KEY_UP_ARROW)    { printf("\u21E7 "); }
@@ -47,23 +47,37 @@ static void input(input_event_t* e) {
         printf("\n");
         if (e->flags & INPUT_SHIFT) {
             /* resize window */
-            if (e->key == KEY_LEFT_ARROW)  { app.window_w--; }
-            if (e->key == KEY_UP_ARROW)    { app.window_h--; }
-            if (e->key == KEY_RIGHT_ARROW) { app.window_w++; }
-            if (e->key == KEY_DOWN_ARROW)  { app.window_h++; }
+            if (e->key == KEY_LEFT_ARROW)  { window_state.w--; }
+            if (e->key == KEY_UP_ARROW)    { window_state.h--; }
+            if (e->key == KEY_RIGHT_ARROW) { window_state.w++; }
+            if (e->key == KEY_DOWN_ARROW)  { window_state.h++; }
         } else {
             /* move window */
-            if (e->key == KEY_LEFT_ARROW)  { app.window_x--; }
-            if (e->key == KEY_UP_ARROW)    { app.window_y++; }
-            if (e->key == KEY_RIGHT_ARROW) { app.window_x++; }
-            if (e->key == KEY_DOWN_ARROW)  { app.window_y--; }
+            if (e->key == KEY_LEFT_ARROW)  { window_state.x--; }
+            if (e->key == KEY_UP_ARROW)    { window_state.y++; }
+            if (e->key == KEY_RIGHT_ARROW) { window_state.x++; }
+            if (e->key == KEY_DOWN_ARROW)  { window_state.y--; }
         }
+    } else if (e->kind == INPUT_MOUSE_MOVE) {
+        printf("INPUT_MOUSE_MOVE %.1f %.1f\n", e->x, e->y);
+    } else if (e->kind == INPUT_MOUSE_DRAG) {
+        printf("INPUT_MOUSE_DRAG %.1f %.1f\n", e->x, e->y);
+    } else if (e->kind == INPUT_MOUSE_DOWN) {
+        printf("INPUT_MOUSE_DOWN %.1f %.1f\n", e->x, e->y);
+    } else if (e->kind == INPUT_MOUSE_UP) {
+        printf("INPUT_MOUSE_UP %.1f %.1f\n", e->x, e->y);
+    } else if (e->kind == INPUT_MOUSE_DOUBLE_CLICK) {
+        printf("INPUT_MOUSE_DOUBLE_CLICK %.1f %.1f\n", e->x, e->y);
+    } else if (e->kind == INPUT_MOUSE_LONG_PRESS) {
+        printf("INPUT_MOUSE_LONG_PRESS %.1f %.1f\n", e->x, e->y);
+    } else if (e->kind == INPUT_TOUCH_PROXIMITY) {
+        printf("INPUT_TOUCH_PROXIMITY %.1f %.1f\n", e->x, e->y);
     }
 }
 
 static void timer() {
 //  printf("[%06d] timer %.6f\n", gettid(), app.time);
-//  app.redraw(0, 0, app.window_w, app.window_h);
+//  app.redraw(0, 0, window_state.w, window_state.h);
 }
 
 static void later_callback(void* that, void* message) {
@@ -89,9 +103,9 @@ void init(int argc, const char* argv[]) {
     app.timer = timer;
     app.prefs = prefs;
     app.exits = exits;
-    //  app.window_state = WINDOW_STATE_FULLSCREEN;
-    app.window_min_w = 800;
-    app.window_min_h = 600;
+    //  window_state.state = WINDOW_STATE_FULLSCREEN;
+    window_state.min_w = 800;
+    window_state.min_h = 600;
     app.timer_frequency = 60; // Hz
     vc = vc3d_create(&app);
 }

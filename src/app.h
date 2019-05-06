@@ -5,11 +5,11 @@
 BEGIN_C
 
 enum {
-    /* app_t.window_state: */
-    WINDOW_STATE_FULLSCREEN = 1, /* app can be in one of three states or */
-    WINDOW_STATE_MINIMIZED  = 2, /* app can be MINIMIZED|FULLSCREEN or MINIMIZED|NORMAL but not both */
-    WINDOW_STATE_NORMAL     = 4,
-    WINDOW_STATE_HIDDEN     = 8, /* any of the above states can be combined with hidden */
+    /* window_state_t.style */
+    WINDOW_STYLE_FULLSCREEN = 1, /* app can be in one of three states or */
+    WINDOW_STYLE_MINIMIZED  = 2, /* app can be MINIMIZED|FULLSCREEN or MINIMIZED|NORMAL but not both */
+    WINDOW_STYLE_NORMAL     = 4,
+    WINDOW_STYLE_HIDDEN     = 8, /* any of the above states can be combined with hidden */
     
     /* mouse/touch input_event_t.kind */
     INPUT_MOUSE_MOVE         = 1,
@@ -61,22 +61,10 @@ typedef struct app_s {
     void (*paint)(int x, int y, int w, int h);
     void (*input)(input_event_t* e);
     void (*timer)();
-    void (*prefs)(); /* Settings|Preferences invoked by user or system */
-    int  (*exits)(); /* "exit status" aka process exit code */
-    int window_state;
-    int window_x;     /* top left corner x in pixels in absolute monitors space coordinates */
-    int window_y;     /* top left corner y in pixels in absolute monitors space coordinates */
-    int window_w;     /* current width  of the window in pixels */
-    int window_h;     /* current height of the window in pixels */
-    int window_max_w; /* if min|max width|height are euqal window is not resizable */
-    int window_max_h;
-    int window_min_w;
-    int window_min_h;
-    int timer_frequency; /* number of timer() callbacks per second or zero */
-    void* gl_pixel_format;
-    void* gl_context;
-    double time;   /* time in seconds since application start */
-    void* window;
+    void (*prefs)();  /* Settings|Preferences invoked by user or system */
+    int  (*exits)();  /* "exit status" aka process exit code */
+    double time;      /* time in seconds since application start */
+    int timer_frequency; /* Hz number of timer() callbacks per second or zero */
 } app_t;
 
 typedef struct startup_s {
@@ -85,20 +73,31 @@ typedef struct startup_s {
     void (*redraw)(int x, int y, int w, int h); /* application may call redraw() to invalidate portion of the screen */
     void* (*map_resource)(const char* resource_name, int* size); // returns address and size of resource (naming system specific)
     void  (*unmap_resource)(void* a, int size); // unmaps the resource
+    void  (*update)(); // update window_state, app.time and app.timer_frequency (also updated periodically)
 } startup_t;
+
+typedef struct window_state_s {
+    int style;
+    int x;     /* top left corner x in pixels in absolute monitors space coordinates */
+    int y;     /* top left corner y in pixels in absolute monitors space coordinates */
+    int w;     /* current width  of the window in pixels */
+    int h;     /* current height of the window in pixels */
+    int max_w; /* min/max in normal state */
+    int max_h;
+    int min_w; /* if min|max width|height are equal window is not resizable */
+    int min_h;
+} window_state_t;
 
 extern app_t     app;
 extern startup_t startup;
+extern window_state_t window_state;
 
 /* 
    Application can request its window to be moved or reshaped by changing its x/y and or width/height
    the window will be reshaped and moved in the next possible event dispatch looop.
 
    All application callbacks are called on event dispatch thread.
-   
-   On Mac OSX for full screen window mode paint() is called on display connection link thread
-   (unless I can try and succeed to channel it to dispatch thread).
- 
+
    input() will be called with decoded UNICODE or ASCII ch != 0, undecoded UNICODE-32 key, and
    combination of flags INPUT_SHIFT ... flags
  
@@ -123,6 +122,5 @@ extern startup_t startup;
 
    redraw() may be called by application to invalidate particular region in application coordinates.
  */
-
 
 END_C
