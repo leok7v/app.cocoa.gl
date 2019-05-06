@@ -12,23 +12,25 @@ enum {
     WINDOW_STYLE_HIDDEN     = 8, /* any of the above states can be combined with hidden */
     
     /* mouse/touch input_event_t.kind */
-    INPUT_MOUSE_MOVE         = 1,
-    INPUT_MOUSE_DRAG         = 2,
-    INPUT_MOUSE_DOWN         = 3,
-    INPUT_MOUSE_UP           = 4, /* this is mouse button up and also `mouse click` */
-    INPUT_MOUSE_DOUBLE_CLICK = 5, /* instead(!) of INPUT_MOUSE_UP */
-    INPUT_MOUSE_LONG_PRESS   = 6, /* for most UI conventions same as INPUT_MOUSE_RIGHT_BUTTON INPUT_MOUSE_UP */
-    INPUT_TOUCH_PROXIMITY    = 7, /* see event.z which is 0|1 for now */
-    
+    INPUT_MOUSE_MOVE          = 1,
+    INPUT_MOUSE_DRAG          = 2,
+    INPUT_MOUSE_DOWN          = 3,
+    INPUT_MOUSE_UP            = 4, /* this is mouse button up and also `mouse click` */
+    INPUT_MOUSE_DOUBLE_CLICK  = 5, /* instead(!) of INPUT_MOUSE_UP */
+    INPUT_MOUSE_LONG_PRESS    = 6, /* for most UI conventions same as INPUT_MOUSE_RIGHT_BUTTON INPUT_MOUSE_UP */
+    INPUT_TOUCH_PROXIMITY     = 7, /* see event.z which is 0|1 for now */
+    INPUT_SCROLL_WHEEL        = 8, /* x,y,[z] contains rows/columns scrolled */
+    INPUT_SCROLL_WHEEL_POINTS = 9, /* same as INPUT_SCROLL_WHEEL but in 1/72 of an inch (aka "points") */
+
     /* keyboard input_event_t.kind */
     INPUT_KEYBOARD           = 10, /* indicates keyboard input, last known mouse coordinates reported too */
     
-    /* input_event_t.button indecies: */
+    /* input_event_t.button indices: */
     INPUT_MOUSE_LEFT_BUTTON  = 10, /* may be swapped for left handed mouse usage but still called 'left' */
     INPUT_MOUSE_OTHER_BUTTON = 11,
     INPUT_MOUSE_RIGHT_BUTTON = 12,
-    INPUT_MOUSE_SCROLL_WHEEL = 13, /* event.y contains delta scroll */
-    
+    INPUT_MOUSE_SCROLL_WHEEL = 13, /* scroll wheel itself can be up/dw/clicked (think Apple MagicMouse) */
+
     /* input_event_t.flags: */
     INPUT_REPEAT   = (1 << 19),
     INPUT_KEYDOWN  = (1 << 20),
@@ -44,12 +46,26 @@ enum {
     INPUT_HELP     = (1 << 30)
 };
 
+enum { // gestures ('flicks') momentum phase for burst of scroll events from Touchpad or Magic Mouse
+    INPUT_MOMENTUM_PHASE_NONE        = 0, // event not associated with a phase.
+    INPUT_MOMENTUM_PHASE_BEGAN       = 0x1 << 0,
+    INPUT_MOMENTUM_PHASE_STATIONARY  = 0x1 << 1,
+    INPUT_MOMENTUM_PHASE_CHANGED     = 0x1 << 2,
+    INPUT_MOMENTUM_PHASE_ENDED       = 0x1 << 3,
+    INPUT_MOMENTUM_PHASE_CANCELLED   = 0x1 << 4,
+    INPUT_MOMENTUM_PHASE_MAYBEGIN    = 0x1 << 5,
+};
+
 typedef struct input_event_s {
     int kind;
     int flags;
     float x; // mouse or primary touch coordinates
     float y;
     float z;
+    float scrolling_delta_x; // for INPUT_SCROLL_WHEEL x,y,z constains simple deltas
+    float scrolling_delta_y;
+    float scrolling_delta_z;
+    int   momentum_phase; // scroll gestures (1:1 for cocoa momentumPhase)
     int ch;
     int key;
     int button;

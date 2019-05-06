@@ -170,6 +170,17 @@ static void mouse_input(NSEvent* e, int kind) {
     app.input(&ie);
 }
 
+static void mouse_scroll_wheel(NSEvent* e) {
+    input_event_t ie = {0};
+    ie.kind = e.hasPreciseScrollingDeltas ? INPUT_SCROLL_WHEEL_POINTS : INPUT_SCROLL_WHEEL;
+    ie.x = e.scrollingDeltaX;
+    ie.y = e.scrollingDeltaY;
+    ie.z = e.deltaZ; // because scrollingDeltaZ is absent
+    ie.button = 0;   // not a INPUT_MOUSE_SCROLL_WHEEL because that is up/dw/double click on scrollwheel
+    ie.momentum_phase = e.momentumPhase;
+    app.input(&ie);
+}
+
 @interface OpenGLView : NSOpenGLView { }
 - (void) drawRect: (NSRect) bounds;
 @end
@@ -231,39 +242,6 @@ static void mouse_input(NSEvent* e, int kind) {
     return self;
 }
 
-- (void) sendEvent: (NSEvent*) e { update_state(self); [super sendEvent: e]; }
-- (BOOL) canBecomeKeyWindow { return true; } // https://stackoverflow.com/questions/11622255/keydown-not-being-called
-- (BOOL) canBecomeMainWindow { return true; }
-- (void) close { [super close]; startup.quit(); }
-//  calling super.keyDown will play a keyboar input refused sound
-- (void) keyDown: (NSEvent*) e { keyboad_input(self, e, INPUT_KEYDOWN); }
-- (void) keyUp: (NSEvent*) e { keyboad_input(self, e, INPUT_KEYUP); [super keyUp: e]; }
-- (void) mouseDown: (NSEvent*) e { mouse_input(e, INPUT_MOUSE_DOWN); [super mouseDown: e]; }
-- (void) mouseUp: (NSEvent*) e { mouse_input(e, INPUT_MOUSE_UP); [super mouseUp: e]; }
-- (void) rightMouseDown: (NSEvent*) e { mouse_input(e, INPUT_MOUSE_DOWN); [super rightMouseDown: e]; }
-- (void) rightMouseUp: (NSEvent*) e { mouse_input(e, INPUT_MOUSE_UP); [super rightMouseUp: e]; }
-- (void) otherMouseDown: (NSEvent*) e { mouse_input(e, INPUT_MOUSE_DOWN); [super otherMouseDown: e]; }
-- (void) otherMouseUp: (NSEvent*) e { mouse_input(e, INPUT_MOUSE_UP); [super otherMouseUp: e]; }
-// mouse motion outside window is also captured on OSX:
-- (void) mouseMoved: (NSEvent*) e { mouse_input(e, INPUT_MOUSE_MOVE); [super mouseMoved: e]; }
-- (void) mouseDragged: (NSEvent*) e { mouse_input(e, INPUT_MOUSE_DRAG); [super mouseDragged: e]; }
-
-- (void) setTimer: (int) frequency {
-    assert(frequency > 0);
-    uint64_t nanoseconds = frequency == 0 ? 0 : NSEC_PER_SEC / frequency;
-    if (timer != null) {
-        dispatch_cancel(timer);
-    }
-    timer = nanoseconds > 0 ? dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, dispatch_get_main_queue()) : null;
-    if (timer != null) {
-        dispatch_source_set_event_handler(timer, ^{
-            if (app.timer != null) { app.timer(); }
-        });
-        dispatch_source_set_timer(timer, dispatch_time(DISPATCH_TIME_NOW, nanoseconds), nanoseconds, 0);
-        dispatch_resume(timer);
-    }
-}
-
 + (Window*) create {
     bool full_screen = (window_state.style & WINDOW_STYLE_FULLSCREEN) != 0;
     int w = maximum(window_state.w, window_state.min_w);
@@ -295,6 +273,44 @@ static void mouse_input(NSEvent* e, int kind) {
     if (full_screen) { toggle_fullscreen(window); }
     return window;
 }
+
+- (void) sendEvent: (NSEvent*) e {
+    if (e.type == NSEventTypeScrollWheel) { mouse_scroll_wheel(e); }
+    update_state(self);
+    [super sendEvent: e];
+}
+
+- (void) setTimer: (int) frequency {
+    assert(frequency > 0);
+    uint64_t nanoseconds = frequency == 0 ? 0 : NSEC_PER_SEC / frequency;
+    if (timer != null) {
+        dispatch_cancel(timer);
+    }
+    timer = nanoseconds > 0 ? dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, dispatch_get_main_queue()) : null;
+    if (timer != null) {
+        dispatch_source_set_event_handler(timer, ^{
+            if (app.timer != null) { app.timer(); }
+        });
+        dispatch_source_set_timer(timer, dispatch_time(DISPATCH_TIME_NOW, nanoseconds), nanoseconds, 0);
+        dispatch_resume(timer);
+    }
+}
+
+- (BOOL) canBecomeKeyWindow { return true; } // https://stackoverflow.com/questions/11622255/keydown-not-being-called
+- (BOOL) canBecomeMainWindow { return true; }
+- (void) close { [super close]; startup.quit(); }
+//  calling super.keyDown will play a keyboar input refused sound
+- (void) keyDown: (NSEvent*) e { keyboad_input(self, e, INPUT_KEYDOWN); }
+- (void) keyUp: (NSEvent*) e { keyboad_input(self, e, INPUT_KEYUP); [super keyUp: e]; }
+- (void) mouseDown: (NSEvent*) e { mouse_input(e, INPUT_MOUSE_DOWN); [super mouseDown: e]; }
+- (void) mouseUp: (NSEvent*) e { mouse_input(e, INPUT_MOUSE_UP); [super mouseUp: e]; }
+- (void) rightMouseDown: (NSEvent*) e { mouse_input(e, INPUT_MOUSE_DOWN); [super rightMouseDown: e]; }
+- (void) rightMouseUp: (NSEvent*) e { mouse_input(e, INPUT_MOUSE_UP); [super rightMouseUp: e]; }
+- (void) otherMouseDown: (NSEvent*) e { mouse_input(e, INPUT_MOUSE_DOWN); [super otherMouseDown: e]; }
+- (void) otherMouseUp: (NSEvent*) e { mouse_input(e, INPUT_MOUSE_UP); [super otherMouseUp: e]; }
+// mouse motion outside window is also captured on OSX:
+- (void) mouseMoved: (NSEvent*) e { mouse_input(e, INPUT_MOUSE_MOVE); [super mouseMoved: e]; }
+- (void) mouseDragged: (NSEvent*) e { mouse_input(e, INPUT_MOUSE_DRAG); [super mouseDragged: e]; }
 
 @end
 
