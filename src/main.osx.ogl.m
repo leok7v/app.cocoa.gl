@@ -159,6 +159,9 @@ static void keyboad_input(NSWindow* window, NSEvent* e, int mask) {
 
 static void mouse_input(NSEvent* e, int kind) {
     input_event_t ie = {0};
+    if (kind == INPUT_MOUSE_UP && e.clickCount == 2) {
+        kind = INPUT_MOUSE_DOUBLE_CLICK; // instead(!) of INPUT_MOUSE_UP
+    }
     ie.kind = kind;
     ie.x = shadow_copy.mouse_x = e.locationInWindow.x;
     ie.y = shadow_copy.mouse_y = e.locationInWindow.y;

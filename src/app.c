@@ -59,9 +59,9 @@ static void input(input_event_t* e) {
             if (e->key == KEY_DOWN_ARROW)  { window_state.y--; }
         }
     } else if (e->kind == INPUT_MOUSE_MOVE) {
-        printf("INPUT_MOUSE_MOVE %.1f %.1f\n", e->x, e->y);
+//      printf("INPUT_MOUSE_MOVE %.1f %.1f\n", e->x, e->y);
     } else if (e->kind == INPUT_MOUSE_DRAG) {
-        printf("INPUT_MOUSE_DRAG %.1f %.1f\n", e->x, e->y);
+//      printf("INPUT_MOUSE_DRAG %.1f %.1f\n", e->x, e->y);
     } else if (e->kind == INPUT_MOUSE_DOWN) {
         printf("INPUT_MOUSE_DOWN %.1f %.1f\n", e->x, e->y);
     } else if (e->kind == INPUT_MOUSE_UP) {

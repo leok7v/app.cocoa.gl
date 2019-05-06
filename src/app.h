@@ -15,8 +15,8 @@ enum {
     INPUT_MOUSE_MOVE         = 1,
     INPUT_MOUSE_DRAG         = 2,
     INPUT_MOUSE_DOWN         = 3,
-    INPUT_MOUSE_UP           = 4,
-    INPUT_MOUSE_DOUBLE_CLICK = 5,
+    INPUT_MOUSE_UP           = 4, /* this is mouse button up and also `mouse click` */
+    INPUT_MOUSE_DOUBLE_CLICK = 5, /* instead(!) of INPUT_MOUSE_UP */
     INPUT_MOUSE_LONG_PRESS   = 6, /* for most UI conventions same as INPUT_MOUSE_RIGHT_BUTTON INPUT_MOUSE_UP */
     INPUT_TOUCH_PROXIMITY    = 7, /* see event.z which is 0|1 for now */
     
